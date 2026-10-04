@@ -1,0 +1,34 @@
+# Frozen project-wide settings. Changing anything under `data` or `measure`
+# invalidates every number in results/points.jsonl, so agree on it as a group.
+
+seed: 0
+
+data:
+  max_len: 64          # fixed sequence length for training, eval AND FLOPs
+  val_frac: 0.1        # stratified hold-out carved from the official train set
+  split_file: data/splits/banking77_split.json
+
+measure:
+  flops_batch_size: 1  # FLOPs are reported per single query
+  latency_threads: 4   # CPU threads, mimics a modest on-prem gateway box
+  latency_warmup: 10
+  latency_runs: 100
+
+train:
+  # fp16 mixed precision. Only a speedup on GPUs WITH tensor cores (V100, RTX 20xx
+  # and newer, A-series). On GTX 16xx / 10xx it is ~6x SLOWER (logs/bench_precision.*).
+  # Override per run with --amp / --no-amp instead of editing this.
+  amp: false
+
+# Static baselines. Train these first, register them, then never retrain.
+baselines:
+  bert-base:
+    hf_name: bert-base-uncased
+    lr: 3.0e-5
+    epochs: 5
+    batch_size: 32
+  distilbert:
+    hf_name: distilbert-base-uncased
+    lr: 5.0e-5
+    epochs: 5
+    batch_size: 32

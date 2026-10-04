@@ -1,0 +1,16 @@
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+
+# Large / regenerable artifacts
+data/raw/
+checkpoints/
+*.out
+*.err
+
+# results/points.jsonl, data/splits/ and logs/*.log|json ARE committed: they are the
+# shared record of how every number was produced.

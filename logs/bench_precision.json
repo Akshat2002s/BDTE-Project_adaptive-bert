@@ -1,0 +1,125 @@
+{
+ "gpu": "NVIDIA GeForce GTX 1650",
+ "torch": "2.14.0+cu126",
+ "level1": {
+  "up   2048x768 @ 768x3072": {
+   "fp32": 2.0444436863137474,
+   "fp16": 0.3365853269946596
+  },
+  "down 2048x3072 @ 3072x768": {
+   "fp32": 2.621509690854053,
+   "fp16": 0.3379962480599228
+  }
+ },
+ "level2": {
+  "steps": {
+   "fp32 bs32": {
+    "median_s": 0.5885106999994605,
+    "ms_per_sample": 18.39095937498314
+   },
+   "fp16-autocast bs32": {
+    "median_s": 3.3266766500091762,
+    "ms_per_sample": 103.95864531278676
+   },
+   "fp32 bs16": {
+    "median_s": 0.33465240000077756,
+    "ms_per_sample": 20.915775000048598
+   },
+   "fp16-autocast bs16": {
+    "median_s": 1.7261449500074377,
+    "ms_per_sample": 107.88405937546486
+   }
+  },
+  "phases": {
+   "fp32": {
+    "fwd": 0.23240000000077998,
+    "fwd+bwd": 0.5324465500016231,
+    "step": 0.5798590999984299
+   },
+   "fp16-autocast": {
+    "fwd": 1.0625103499987745,
+    "fwd+bwd": 3.2612862000023597,
+    "step": 3.33045134999702
+   }
+  }
+ },
+ "level3": {
+  "fp32": {
+   "wall_s": 0.5869680333319897,
+   "gpu_busy_s": 0.6278670536666663,
+   "top_kernels": [
+    [
+     "volta_sgemm_32x128_tn",
+     0.20604219566666707
+    ],
+    [
+     "volta_sgemm_64x64_nn",
+     0.08780398000000021
+    ],
+    [
+     "volta_sgemm_128x32_nn",
+     0.0541022240000002
+    ],
+    [
+     "Optimizer.step#AdamW.step",
+     0.04965760066666656
+    ],
+    [
+     "volta_sgemm_64x32_sliced1x4_nt",
+     0.04759860533333329
+    ],
+    [
+     "volta_sgemm_64x64_nt",
+     0.041205348666666655
+    ],
+    [
+     "volta_sgemm_128x64_nt",
+     0.038310329333333205
+    ],
+    [
+     "_ZN2at6native57_GLOBAL__N__eeeb9840_24_ForeachBinaryOpScalar_cu_86b9896c25multi_tensor_apply_kernelINS1_18TensorListMetadataILi1EEENS1_21BinaryOpScalarFunctorIfLi1ELi1ELi0EEEJSt10multipliesIfEfEEEvT_T0_DpT1_",
+     0.01000008799999991
+    ]
+   ]
+  },
+  "fp16-autocast": {
+   "wall_s": 3.33190276666816,
+   "gpu_busy_s": 3.3730703666666564,
+   "top_kernels": [
+    [
+     "volta_fp16_s884gemm_fp16_128x128_ldg8_f2f_stages_32x1_nt",
+     1.109320322999998
+    ],
+    [
+     "volta_fp16_s884gemm_fp16_128x128_ldg8_f2f_nn",
+     0.6879263963333361
+    ],
+    [
+     "_ZN7cutlass7Kernel2I59cutlass_70_tensorop_f16_s884gemm_relu_f16_128x128_tn_align8EEvNT_6ParamsE",
+     0.6850617903333324
+    ],
+    [
+     "volta_fp16_s884gemm_fp16_128x128_ldg8_relu_f2f_stages_32x1_tn",
+     0.34454789433333166
+    ],
+    [
+     "_ZN7cutlass7Kernel2I59cutlass_70_tensorop_f16_s884gemm_relu_f16_128x128_nn_align8EEvNT_6ParamsE",
+     0.3427696526666653
+    ],
+    [
+     "Optimizer.step#AdamW.step",
+     0.049342643333333394
+    ],
+    [
+     "volta_fp16_s884gemm_fp16_64x64_ldg8_f2f_nn",
+     0.014637748999999435
+    ],
+    [
+     "volta_fp16_s884gemm_fp16_64x64_ldg8_f2f_nt",
+     0.014504723666667161
+    ]
+   ]
+  }
+ },
+ "peak_mem_gib": 2.6298961639404297
+}

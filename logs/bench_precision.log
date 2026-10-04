@@ -1,0 +1,133 @@
+GPU: NVIDIA GeForce GTX 1650, 4.0 GiB, compute capability 7.5, torch 2.14.0+cu126
+
+=== Level 1: raw GEMM throughput (BERT FFN shapes, batch 32 x seq 64) ===
+  up   2048x768 @ 768x3072:  fp32  2.04 TFLOPS   fp16  0.34 TFLOPS   (fp16/fp32 = 0.16x)
+  down 2048x3072 @ 3072x768:  fp32  2.62 TFLOPS   fp16  0.34 TFLOPS   (fp16/fp32 = 0.13x)
+
+=== Level 2a: full training step, precision x batch (interleaved A,B,A,B) ===
+  round 1/2
+    fp32 bs32                    step  1/6  0.578 s
+    fp32 bs32                    step  2/6  0.581 s
+    fp32 bs32                    step  3/6  0.581 s
+    fp32 bs32                    step  4/6  0.580 s
+    fp32 bs32                    step  5/6  0.579 s
+    fp32 bs32                    step  6/6  0.581 s
+    fp16-autocast bs32           step  1/6  3.318 s
+    fp16-autocast bs32           step  2/6  3.318 s
+    fp16-autocast bs32           step  3/6  3.319 s
+    fp16-autocast bs32           step  4/6  3.320 s
+    fp16-autocast bs32           step  5/6  3.318 s
+    fp16-autocast bs32           step  6/6  3.327 s
+    fp32 bs16                    step  1/6  0.337 s
+    fp32 bs16                    step  2/6  0.339 s
+    fp32 bs16                    step  3/6  0.341 s
+    fp32 bs16                    step  4/6  0.338 s
+    fp32 bs16                    step  5/6  0.338 s
+    fp32 bs16                    step  6/6  0.334 s
+    fp16-autocast bs16           step  1/6  1.723 s
+    fp16-autocast bs16           step  2/6  1.728 s
+    fp16-autocast bs16           step  3/6  1.722 s
+    fp16-autocast bs16           step  4/6  1.724 s
+    fp16-autocast bs16           step  5/6  1.725 s
+    fp16-autocast bs16           step  6/6  1.727 s
+  round 2/2
+    fp32 bs32                    step  1/6  0.599 s
+    fp32 bs32                    step  2/6  0.601 s
+    fp32 bs32                    step  3/6  0.597 s
+    fp32 bs32                    step  4/6  0.600 s
+    fp32 bs32                    step  5/6  0.596 s
+    fp32 bs32                    step  6/6  0.598 s
+    fp16-autocast bs32           step  1/6  3.327 s
+    fp16-autocast bs32           step  2/6  3.333 s
+    fp16-autocast bs32           step  3/6  3.334 s
+    fp16-autocast bs32           step  4/6  3.333 s
+    fp16-autocast bs32           step  5/6  3.335 s
+    fp16-autocast bs32           step  6/6  3.335 s
+    fp32 bs16                    step  1/6  0.331 s
+    fp32 bs16                    step  2/6  0.331 s
+    fp32 bs16                    step  3/6  0.330 s
+    fp32 bs16                    step  4/6  0.335 s
+    fp32 bs16                    step  5/6  0.331 s
+    fp32 bs16                    step  6/6  0.333 s
+    fp16-autocast bs16           step  1/6  1.721 s
+    fp16-autocast bs16           step  2/6  1.722 s
+    fp16-autocast bs16           step  3/6  1.730 s
+    fp16-autocast bs16           step  4/6  1.736 s
+    fp16-autocast bs16           step  5/6  1.754 s
+    fp16-autocast bs16           step  6/6  1.728 s
+
+  median s/step   ms/sample
+  fp32 bs32                0.589      18.4
+  fp16-autocast bs32       3.327     104.0
+  fp32 bs16                0.335      20.9
+  fp16-autocast bs16       1.726     107.9
+
+=== Level 2b: where the time goes (batch 32) ===
+    fp32 fwd                     step  1/4  0.232 s
+    fp32 fwd                     step  2/4  0.236 s
+    fp32 fwd                     step  3/4  0.232 s
+    fp32 fwd                     step  4/4  0.233 s
+    fp32 fwd+bwd                 step  1/4  0.536 s
+    fp32 fwd+bwd                 step  2/4  0.533 s
+    fp32 fwd+bwd                 step  3/4  0.532 s
+    fp32 fwd+bwd                 step  4/4  0.529 s
+    fp32 step                    step  1/4  0.577 s
+    fp32 step                    step  2/4  0.580 s
+    fp32 step                    step  3/4  0.583 s
+    fp32 step                    step  4/4  0.580 s
+  fp32           fwd 0.232s   bwd 0.300s   optimizer 0.047s   total 0.580s
+    fp16-autocast fwd            step  1/4  1.065 s
+    fp16-autocast fwd            step  2/4  1.062 s
+    fp16-autocast fwd            step  3/4  1.061 s
+    fp16-autocast fwd            step  4/4  1.063 s
+    fp16-autocast fwd+bwd        step  1/4  3.259 s
+    fp16-autocast fwd+bwd        step  2/4  3.263 s
+    fp16-autocast fwd+bwd        step  3/4  3.259 s
+    fp16-autocast fwd+bwd        step  4/4  3.267 s
+    fp16-autocast step           step  1/4  3.312 s
+    fp16-autocast step           step  2/4  3.330 s
+    fp16-autocast step           step  3/4  3.331 s
+    fp16-autocast step           step  4/4  3.331 s
+  fp16-autocast  fwd 1.063s   bwd 2.199s   optimizer 0.069s   total 3.330s
+
+=== Level 3: profiler, batch 32 ===
+python.exe : USDT:2026-10-04 16:56:09 21768:34868 
+C:\actions-runner\_work\pytorch\pytorch\third_party\kineto\libkineto\src\SyncActivityProfilerHandler.cpp:39] 
+profiler_start
+At line:1 char:68
++ ... benchmark'; & 'D:\UvA_VU\Period 7\Big Data at the Edge\.envs\adaptive ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (USDT:2026-10-04... profiler_start:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+USDT:2026-10-04 16:56:11 21768:34868 
+C:\actions-runner\_work\pytorch\pytorch\third_party\kineto\libkineto\src\SyncActivityProfilerHandler.cpp:46] 
+profiler_stop
+
+  fp32: wall 0.587 s/step, GPU kernels busy 0.628 s/step (107% of wall)
+     32.8%  volta_sgemm_32x128_tn
+     14.0%  volta_sgemm_64x64_nn
+      8.6%  volta_sgemm_128x32_nn
+      7.9%  Optimizer.step#AdamW.step
+      7.6%  volta_sgemm_64x32_sliced1x4_nt
+      6.6%  volta_sgemm_64x64_nt
+      6.1%  volta_sgemm_128x64_nt
+      1.6%  _ZN2at6native57_GLOBAL__N__eeeb9840_24_ForeachBinaryOpScalar_cu_86b9896c25multi_tensor_app
+USDT:2026-10-04 16:56:23 21768:34868 
+C:\actions-runner\_work\pytorch\pytorch\third_party\kineto\libkineto\src\SyncActivityProfilerHandler.cpp:39] 
+profiler_start
+USDT:2026-10-04 16:56:33 21768:34868 
+C:\actions-runner\_work\pytorch\pytorch\third_party\kineto\libkineto\src\SyncActivityProfilerHandler.cpp:46] 
+profiler_stop
+
+  fp16-autocast: wall 3.332 s/step, GPU kernels busy 3.373 s/step (101% of wall)
+     32.9%  volta_fp16_s884gemm_fp16_128x128_ldg8_f2f_stages_32x1_nt
+     20.4%  volta_fp16_s884gemm_fp16_128x128_ldg8_f2f_nn
+     20.3%  _ZN7cutlass7Kernel2I59cutlass_70_tensorop_f16_s884gemm_relu_f16_128x128_tn_align8EEvNT_6Pa
+     10.2%  volta_fp16_s884gemm_fp16_128x128_ldg8_relu_f2f_stages_32x1_tn
+     10.2%  _ZN7cutlass7Kernel2I59cutlass_70_tensorop_f16_s884gemm_relu_f16_128x128_nn_align8EEvNT_6Pa
+      1.5%  Optimizer.step#AdamW.step
+      0.4%  volta_fp16_s884gemm_fp16_64x64_ldg8_f2f_nn
+      0.4%  volta_fp16_s884gemm_fp16_64x64_ldg8_f2f_nt
+
+peak memory 2.63 GiB, results -> D:\UvA_VU\Period 7\Big Data at the Edge\adaptive-bert\logs\bench_precision.json
