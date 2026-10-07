@@ -20,9 +20,9 @@ conda env config vars set HF_HOME="D:\UvA_VU\Period 7\Big Data at the Edge\.cach
 ```
 
 The local GPU (GTX 1650, 4 GB) is enough for the baselines and single elastic runs.
-DAS-6 is for sweeps and ablations, not a requirement.
+DAS-5 is for sweeps and ablations, not a requirement.
 
-DAS-6 (venv, same `requirements.txt`):
+DAS-5 (venv, same `requirements.txt`):
 
 ```bash
 python -m venv ~/venvs/adaptive-bert && source ~/venvs/adaptive-bert/bin/activate
@@ -44,7 +44,6 @@ python scripts/plot_pareto.py                  # results/pareto_test.png
 ## Frozen decisions
 
 Changing any of these invalidates every number already in `results/points.jsonl`.
-Agree as a group before touching them.
 
 | Decision | Value | Where |
 |---|---|---|
@@ -73,7 +72,7 @@ src/abert/models.py      static baseline builders
 src/abert/train.py       fine-tuning loop (best epoch on val)
 src/abert/elastic.py     ElasticBert interface (to implement)
 scripts/                 prepare_data, train_baseline, measure, plot_pareto
-slurm/                   DAS-6 job scripts
+slurm/                   DAS-5 job scripts
 tests/                   FLOPs, registry and split checks
 ```
 
@@ -83,7 +82,7 @@ tests/                   FLOPs, registry and split checks
 |---|---|---|
 | 1 | Static baselines trained and frozen | FLOPs/latency harness, baseline points registered |
 | 2 | ElasticBert: importance ordering, slicing, exits, distillation (local GPU) | Exit calibration on val, per-config latency table |
-| 3 | Fixes, INT8 dynamic quantisation, training sweeps on DAS-6 | MDP (value iteration), bursty traffic simulation, Pareto sweeps |
+| 3 | Fixes, INT8 dynamic quantisation, training sweeps on DAS-5 | MDP (value iteration), bursty traffic simulation, Pareto sweeps |
 | 4 | Ablations | Slides |
 
 ## Open questions
