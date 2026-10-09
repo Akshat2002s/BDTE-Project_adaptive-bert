@@ -22,9 +22,13 @@ FAMILIES = {"static", "adaptive"}
 
 def _git_commit() -> str:
     try:
-        return subprocess.check_output(
+        commit = subprocess.check_output(
             ["git", "rev-parse", "--short", "HEAD"], cwd=ROOT,
             stderr=subprocess.DEVNULL, text=True).strip()
+        dirty = subprocess.check_output(
+            ["git", "status", "--porcelain", "--untracked-files=no"], cwd=ROOT,
+            stderr=subprocess.DEVNULL, text=True).strip()
+        return commit + ("-dirty" if dirty else "")
     except (subprocess.CalledProcessError, FileNotFoundError):
         return "unknown"
 

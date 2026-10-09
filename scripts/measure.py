@@ -29,7 +29,7 @@ def main() -> None:
     args = parser.parse_args()
 
     Tee(ROOT / "logs" / f"measure_{args.name}.log")
-    print(f"=== measure {json.dumps({'name': args.name, 'checkpoint': str(args.checkpoint), **run_info()})}")
+    print(f"=== measure {json.dumps({'name': args.name, 'checkpoint': args.checkpoint.as_posix(), **run_info()})}")
     cfg = load_config()
     max_len, m = cfg["data"]["max_len"], cfg["measure"]
     split_file = resolve(cfg["data"]["split_file"])

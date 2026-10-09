@@ -31,8 +31,15 @@ def set_seed(seed: int) -> None:
 
 
 def get_device() -> torch.device:
-    return torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
+    if torch.cuda.is_available():
+        print(f"using GPU {torch.cuda.get_device_name(0)}")
+        return torch.device("cuda")
+    elif torch.backends.mps.is_available():
+        print("using MPS")
+        return torch.device("mps")
+    else:
+        print("using CPU")
+        return torch.device("cpu")
 
 def run_info() -> dict:
     """What produced a result: time, machine, library versions, GPU, git commit."""

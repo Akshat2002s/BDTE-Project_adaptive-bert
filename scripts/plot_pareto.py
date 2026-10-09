@@ -23,7 +23,7 @@ def main() -> None:
 
     df = registry.load(args.split)
     if df.empty:
-        raise SystemExit("no points registered for this split yet")
+        raise SystemExit("No points registered for this split yet")
 
     fig, ax = plt.subplots(figsize=(7, 4.5))
     for family, group in df.groupby("family"):
