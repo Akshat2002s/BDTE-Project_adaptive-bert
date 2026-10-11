@@ -1,5 +1,5 @@
 #!/bin/bash
-# Fine-tune one static baseline on DAS-6.
+# Fine-tune one static baseline on DAS-5.
 #   sbatch slurm/train_baseline.sbatch bert-base
 #   sbatch slurm/train_baseline.sbatch distilbert
 #SBATCH --job-name=abert-baseline

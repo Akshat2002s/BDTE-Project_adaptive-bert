@@ -1,0 +1,5 @@
+=== run {"name": "bert-base", "hf_name": "bert-base-uncased", "lr": 5e-05, "epochs": 5, "batch_size": 32, "amp": false, "seed": 0, "max_len": 64, "time": "2026-10-11T18:51:04", "host": "LAPTOP-5OAB11N8", "torch": "2.14.0+cu126", "transformers": "5.18.0", "gpu": "NVIDIA GeForce GTX 1650", "git_commit": "9c9132d"}
+using GPU NVIDIA GeForce GTX 1650
+precision: fp32 on cuda
+epoch 1/5  val_acc 76.42%  time 271s  peak_mem 2.63 GiB
+epoch 2/5  val_acc 89.81%  time 258s  peak_mem 2.63 GiB

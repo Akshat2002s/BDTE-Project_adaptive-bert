@@ -1,0 +1,29 @@
+=== run {"name": "elastic", "teacher": "checkpoints/bert-base", "out_dir": "checkpoints/elastic", "widths": [1.0, 0.75, 0.5, 0.25], "exit_layers": [4, 8, 12], "importance_batches": 50, "sandwich_random": 1, "lr": 2e-05, "epochs": 3, "batch_size": 32, "kd_alpha": 0.5, "kd_temperature": 2.0, "random_order": false, "amp": false, "seed": 0, "max_len": 64, "time": "2026-10-11T15:42:59", "host": "LAPTOP-5OAB11N8", "torch": "2.14.0+cu126", "transformers": "5.18.0", "gpu": "NVIDIA GeForce GTX 1650", "git_commit": "9c9132d"}
+using GPU NVIDIA GeForce GTX 1650
+teacher logits for 9002 train queries in 67s
+importance from 50 batches in 23s
+val accuracy after reordering, before training:
+        exit4     exit8     exit12    
+  w1.0    0.30      3.90     90.61    
+  w0.75   1.60      4.90     89.51    
+  w0.5    1.60      1.40     40.16    
+  w0.25   1.80      1.80      1.80    
+epoch 1/3  mean val_acc 72.76%  time 552s  peak_mem 2.79 GiB
+        exit4     exit8     exit12    
+  w1.0   57.54     82.22     89.81    
+  w0.75  55.44     81.22     89.31    
+  w0.5   50.75     79.62     88.31    
+  w0.25  41.86     72.13     84.92    
+epoch 2/3  mean val_acc 81.57%  time 558s  peak_mem 2.79 GiB
+        exit4     exit8     exit12    
+  w1.0   75.22     87.01     90.91    
+  w0.75  73.03     86.71     89.81    
+  w0.5   70.03     85.41     89.01    
+  w0.25  62.04     81.72     87.91    
+epoch 3/3  mean val_acc 83.10%  time 554s  peak_mem 2.79 GiB
+        exit4     exit8     exit12    
+  w1.0   78.82     87.81     91.21    
+  w0.75  75.82     87.61     90.31    
+  w0.5   72.43     86.51     89.41    
+  w0.25  66.13     83.02     88.11    
+best mean val acc 83.10% -> D:\UvA_VU\Period 7\Big Data at the Edge\BDTE Project_adaptive-bert\checkpoints\elastic

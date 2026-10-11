@@ -1,0 +1,66 @@
+=== measure {"name": "elastic", "checkpoint": "checkpoints/elastic", "time": "2026-10-11T20:46:48", "host": "LAPTOP-5OAB11N8", "torch": "2.14.0+cu126", "transformers": "5.18.0", "gpu": "NVIDIA GeForce GTX 1650", "git_commit": "9c9132d"}
+using GPU NVIDIA GeForce GTX 1650
+threshold replay agrees with real forward on 100.0% of 256 queries
+  w1.0   exit4     3.676 GFLOPs  p50   31.8 ms  p95   34.5 ms
+  w1.0   exit8     7.350 GFLOPs  p50   61.4 ms  p95   65.2 ms
+  w1.0   exit12   11.024 GFLOPs  p50   88.3 ms  p95   95.7 ms
+  w0.75  exit4     2.757 GFLOPs  p50   22.5 ms  p95   24.5 ms
+  w0.75  exit8     5.513 GFLOPs  p50   44.7 ms  p95   46.8 ms
+  w0.75  exit12    8.268 GFLOPs  p50   67.2 ms  p95   70.0 ms
+  w0.5   exit4     1.838 GFLOPs  p50   15.2 ms  p95   15.9 ms
+  w0.5   exit8     3.676 GFLOPs  p50   29.4 ms  p95   32.2 ms
+  w0.5   exit12    5.513 GFLOPs  p50   44.0 ms  p95   46.2 ms
+  w0.25  exit4     0.920 GFLOPs  p50    9.0 ms  p95    9.4 ms
+  w0.25  exit8     1.838 GFLOPs  p50   16.8 ms  p95   17.4 ms
+  w0.25  exit12    2.757 GFLOPs  p50   24.3 ms  p95   26.1 ms
+
+point                               val   test GFLOPs(test)  p50 ms
+elastic-w1.0-exit4                90.11  90.00        3.676    31.8
+elastic-w1.0-exit8                91.61  92.34        7.350    61.4
+elastic-w1.0-exit12               93.21  93.05       11.024    88.3
+elastic-w1.0-thr0.5               91.51  91.69        4.037    34.6
+elastic-w1.0-thr0.6               92.31  92.24        4.273    36.4
+elastic-w1.0-thr0.7               92.91  92.76        4.569    38.7
+elastic-w1.0-thr0.8               93.21  92.95        4.961    41.8
+elastic-w1.0-thr0.85              93.21  92.99        5.313    44.5
+elastic-w1.0-thr0.9               93.31  93.02        5.936    49.3
+elastic-w1.0-thr0.95              93.31  93.05        7.559    61.8
+elastic-w1.0-thr0.98              93.21  93.05       10.814    86.6
+elastic-w1.0-thr0.99              93.21  93.05       11.027    88.3
+elastic-w0.75-exit4               89.51  89.71        2.757    22.5
+elastic-w0.75-exit8               92.01  92.14        5.513    44.7
+elastic-w0.75-exit12              93.21  92.73        8.268    67.2
+elastic-w0.75-thr0.5              91.61  91.59        3.073    25.1
+elastic-w0.75-thr0.6              92.21  92.01        3.235    26.4
+elastic-w0.75-thr0.7              93.01  92.24        3.466    28.2
+elastic-w0.75-thr0.8              93.21  92.66        3.823    31.1
+elastic-w0.75-thr0.85             93.11  92.60        4.106    33.4
+elastic-w0.75-thr0.9              93.21  92.73        4.597    37.4
+elastic-w0.75-thr0.95             93.31  92.73        5.884    47.8
+elastic-w0.75-thr0.98             93.21  92.73        8.131    66.1
+elastic-w0.75-thr0.99             93.21  92.73        8.271    67.2
+elastic-w0.5-exit4                88.71  88.93        1.838    15.2
+elastic-w0.5-exit8                91.21  91.40        3.676    29.4
+elastic-w0.5-exit12               92.41  92.24        5.513    44.0
+elastic-w0.5-thr0.5               90.61  90.84        2.084    17.1
+elastic-w0.5-thr0.6               92.01  91.30        2.236    18.3
+elastic-w0.5-thr0.7               92.11  91.82        2.402    19.6
+elastic-w0.5-thr0.8               92.61  92.11        2.683    21.8
+elastic-w0.5-thr0.85              92.41  92.21        2.900    23.5
+elastic-w0.5-thr0.9               92.41  92.24        3.292    26.5
+elastic-w0.5-thr0.95              92.41  92.24        4.168    33.4
+elastic-w0.5-thr0.98              92.41  92.24        5.454    43.6
+elastic-w0.5-thr0.99              92.41  92.24        5.515    44.0
+elastic-w0.25-exit4               87.41  86.14        0.920     9.0
+elastic-w0.25-exit8               89.51  90.13        1.838    16.8
+elastic-w0.25-exit12              90.71  91.75        2.757    24.3
+elastic-w0.25-thr0.5              89.61  89.94        1.121    10.7
+elastic-w0.25-thr0.6              90.01  91.07        1.228    11.6
+elastic-w0.25-thr0.7              90.31  91.43        1.345    12.6
+elastic-w0.25-thr0.8              90.71  91.75        1.539    14.2
+elastic-w0.25-thr0.85             90.71  91.79        1.686    15.4
+elastic-w0.25-thr0.9              90.71  91.75        1.903    17.2
+elastic-w0.25-thr0.95             90.71  91.75        2.410    21.4
+elastic-w0.25-thr0.98             90.71  91.75        2.759    24.3
+elastic-w0.25-thr0.99             90.71  91.75        2.760    24.3
+wrote D:\UvA_VU\Period 7\Big Data at the Edge\BDTE Project_adaptive-bert\results\elastic_table.json and D:\UvA_VU\Period 7\Big Data at the Edge\BDTE Project_adaptive-bert\results\elastic_examples.npz

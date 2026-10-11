@@ -1,0 +1,8 @@
+=== measure {"name": "distilbert", "checkpoint": "checkpoints/distilbert", "time": "2026-10-11T17:39:17", "host": "LAPTOP-5OAB11N8", "torch": "2.14.0+cu126", "transformers": "5.18.0", "gpu": "NVIDIA GeForce GTX 1650", "git_commit": "9c9132d"}
+using GPU NVIDIA GeForce GTX 1650
+distilbert           val  acc  91.91%  5.513 GFLOPs  p50 82.1 ms
+distilbert           test acc  92.11%  5.513 GFLOPs  p50 82.1 ms
+=== measure {"name": "distilbert", "checkpoint": "checkpoints/distilbert", "time": "2026-10-11T20:46:15", "host": "LAPTOP-5OAB11N8", "torch": "2.14.0+cu126", "transformers": "5.18.0", "gpu": "NVIDIA GeForce GTX 1650", "git_commit": "9c9132d"}
+using GPU NVIDIA GeForce GTX 1650
+distilbert           val  acc  91.91%  5.513 GFLOPs  p50 42.8 ms
+distilbert           test acc  92.11%  5.513 GFLOPs  p50 42.8 ms

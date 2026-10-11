@@ -38,8 +38,14 @@ Check everything works: `pytest`.
 python scripts/prepare_data.py                 # once: frozen split -> data/splits/ (commit it)
 python scripts/train_baseline.py bert-base     # fp32; add --amp only on tensor-core GPUs (see configs/base.yaml)
 python scripts/measure.py checkpoints/bert-base --name bert-base
+python scripts/train_elastic.py                # -> checkpoints/elastic (teacher: checkpoints/bert-base)
+python scripts/measure_elastic.py              # every (width, exit) and (width, threshold) point
+python scripts/simulate.py                     # bursty traffic: fixed points vs greedy rule vs MDP
 python scripts/plot_pareto.py                  # results/pareto_test.png
 ```
+
+Ablations: `train_elastic.py --no-kd --out checkpoints/elastic-nokd` and
+`--random-order --out checkpoints/elastic-random`, each followed by `measure_elastic.py <dir>`.
 
 ## Frozen decisions
 
@@ -63,17 +69,20 @@ dependency. `tests/test_flops.py` checks it against a hand calculation.
 ## Layout
 
 ```
-configs/base.yaml        frozen settings + baseline hyperparameters
+configs/base.yaml        frozen settings, baseline / elastic / simulation hyperparameters
 src/abert/data.py        Banking77 download, frozen split, tokenisation
 src/abert/flops.py       the one FLOPs methodology
 src/abert/bench.py       latency, size, params
 src/abert/registry.py    results/points.jsonl read/write + Pareto mask
 src/abert/models.py      static baseline builders
 src/abert/train.py       fine-tuning loop (best epoch on val)
-src/abert/elastic.py     ElasticBert interface (to implement)
-scripts/                 prepare_data, train_baseline, measure, plot_pareto
+src/abert/elastic.py     ElasticBert: importance ordering, width slicing, exit heads
+src/abert/controller.py  queue-aware MDP (value iteration) + greedy SLA baseline
+src/abert/sim.py         discrete-event simulation of the gateway under bursty traffic
+scripts/                 prepare_data, train_baseline, measure, train_elastic,
+                         measure_elastic, simulate, plot_pareto, bench_precision
 slurm/                   DAS-5 job scripts
-tests/                   FLOPs, registry and split checks
+tests/                   FLOPs, registry, split, elastic model and controller checks
 ```
 
 ## Plan
@@ -85,8 +94,30 @@ tests/                   FLOPs, registry and split checks
 | 3 | Fixes, INT8 dynamic quantisation, training sweeps on DAS-5 | MDP (value iteration), bursty traffic simulation, Pareto sweeps |
 | 4 | Ablations | Slides |
 
+## Run history
+
+Nothing is overwritten; superseded runs are renamed. `results/points.jsonl` is
+append-only, so the old lines are still there: entries timestamped before
+2026-10-11T18:00 that point at `checkpoints/bert-base` or `checkpoints/elastic`
+refer to the models now in the `-lr3e-5` / `-3ep` folders below.
+
+| Run | Checkpoint | Logs / results | Notes |
+|---|---|---|---|
+| BERT-base, lr 3e-5 | `bert-base-lr3e-5` | `logs/*bert-base-lr3e-5.log` | 90.61% val / 91.20% test; beaten by DistilBERT, so retrained |
+| Elastic, 3 epochs | `elastic-3ep` | `logs/*elastic-3ep.log`, `results/elastic-3ep_*`, `results/pareto_test_3ep.png` | Reference for the two ablations below |
+| Ablation: no KD, 3 epochs | `elastic-nokd` | `logs/train_elastic-nokd.log` | Mean val 83.03% vs 83.10% with KD: no measurable effect |
+| Ablation: random order, 3 epochs | `elastic-random` | `logs/train_elastic-random.log` | Mean val 79.85% vs 83.10%: importance ordering helps, most at narrow widths |
+| BERT-base, lr 5e-5, failed | `bert-base-lr5e-5_failed-oom` | `logs/train_bert-base-lr5e-5_failed-oom.log` | Crashed saving epoch 2 (laptop out of RAM + page file); folder is inconsistent, see `FAILED.txt` |
+| BERT-base, lr 5e-5 (final) | `bert-base` | `logs/*bert-base.log` | Final static baseline and distillation teacher |
+| Elastic, 10 epochs (final) | `elastic` | `logs/*elastic.log`, `results/elastic_*` | Final adaptive model |
+
+## Decided
+
+- Exit heads: one per depth, shared across widths (the hidden size stays 768).
+- Training rule for the extreme widths: sandwich rule (largest + smallest + one random
+  middle width per step), KD from the frozen bert-base on every exit.
+
 ## Open questions
 
-- Exit heads shared across widths or one per width (leaning shared; hidden size stays 768).
-- Training rule for the extreme widths: sandwich rule vs progressive shrinking.
-- Statically head-pruned baselines: which ratios, and what transformers 5.x supports.
+- Statically head-pruned baselines: which ratios (can reuse `importance.pt` from the
+  elastic run).

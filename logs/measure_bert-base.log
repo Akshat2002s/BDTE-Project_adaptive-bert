@@ -1,3 +1,4 @@
-=== measure {"name": "bert-base", "checkpoint": "checkpoints\\bert-base", "time": "2026-10-04T17:30:42", "host": "LAPTOP-5OAB11N8", "torch": "2.14.0+cu126", "transformers": "5.18.0", "gpu": "NVIDIA GeForce GTX 1650", "git_commit": "uncommitted"}
-bert-base            val  acc  90.61%  11.024 GFLOPs  p50 132.3 ms
-bert-base            test acc  91.20%  11.024 GFLOPs  p50 132.3 ms
+=== measure {"name": "bert-base", "checkpoint": "checkpoints/bert-base", "time": "2026-10-11T20:45:21", "host": "LAPTOP-5OAB11N8", "torch": "2.14.0+cu126", "transformers": "5.18.0", "gpu": "NVIDIA GeForce GTX 1650", "git_commit": "9c9132d"}
+using GPU NVIDIA GeForce GTX 1650
+bert-base            val  acc  92.11%  11.024 GFLOPs  p50 93.1 ms
+bert-base            test acc  92.82%  11.024 GFLOPs  p50 93.1 ms

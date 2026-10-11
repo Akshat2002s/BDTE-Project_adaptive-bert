@@ -1,10 +1,6 @@
-"""Train the elastic (width x depth) BERT.  YOU WRITE THE TODO PARTS: guide Step 4.
+"""Train the elastic (width x depth) BERT from the frozen bert-base checkpoint.
 
-Provided: arguments, logging, data loading, saving. Yours: teacher_logits, exit_loss,
-and the sandwich training step inside main().
-
-
-    python scripts/train_elastic.py                       # main model -> checkpoints/elastic
+    python scripts/train_elastic.py                      # main model -> checkpoints/elastic
     python scripts/train_elastic.py --no-kd --out checkpoints/elastic-nokd          # ablation
     python scripts/train_elastic.py --random-order --out checkpoints/elastic-random # ablation
 

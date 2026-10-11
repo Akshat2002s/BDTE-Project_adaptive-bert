@@ -1,10 +1,6 @@
-"""Measure every operating point of a trained ElasticBert.  YOU WRITE THE TODO PARTS: Step 5.
+"""Measure every operating point of a trained ElasticBert and register it.
 
-Provided: loading, the replay check, writing the files and the summary table.
-Yours: the per-(width, exit) cost loop and the cost of each point inside add().
-
-
-    python scripts/measure_elastic.py                                  # checkpoints/elastic
+    python scripts/measure_elastic.py                                 # checkpoints/elastic
     python scripts/measure_elastic.py checkpoints/elastic-nokd --name elastic-nokd
 
 Operating points (all family "adaptive", val and test rows each):

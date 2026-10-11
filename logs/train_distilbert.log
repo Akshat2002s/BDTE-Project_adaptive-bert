@@ -1,0 +1,9 @@
+=== run {"name": "distilbert", "hf_name": "distilbert-base-uncased", "lr": 5e-05, "epochs": 5, "batch_size": 32, "amp": false, "seed": 0, "max_len": 64, "time": "2026-10-11T15:34:42", "host": "LAPTOP-5OAB11N8", "torch": "2.14.0+cu126", "transformers": "5.18.0", "gpu": "NVIDIA GeForce GTX 1650", "git_commit": "9c9132d"}
+using GPU NVIDIA GeForce GTX 1650
+precision: fp32 on cuda
+epoch 1/5  val_acc 80.22%  time 91s  peak_mem 1.59 GiB
+epoch 2/5  val_acc 89.41%  time 91s  peak_mem 1.59 GiB
+epoch 3/5  val_acc 90.71%  time 90s  peak_mem 1.59 GiB
+epoch 4/5  val_acc 91.51%  time 91s  peak_mem 1.59 GiB
+epoch 5/5  val_acc 91.91%  time 91s  peak_mem 1.59 GiB
+best val acc 91.91% -> D:\UvA_VU\Period 7\Big Data at the Edge\BDTE Project_adaptive-bert\checkpoints\distilbert

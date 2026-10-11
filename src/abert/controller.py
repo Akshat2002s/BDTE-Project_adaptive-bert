@@ -10,7 +10,10 @@ Model (a semi-Markov decision process, solved by value iteration):
                     mixed over the traffic regimes r (calm / burst) with their
                     stationary probabilities. That keeps the state 1-D but makes
                     the arrival count as bursty as the real traffic.
-  * next state:     min(q - 1 + A, capacity); arrivals beyond capacity are dropped
+  * next state:     min(q - 1 + A, capacity - 1). `capacity` counts every query in
+                    the system, including the one in service (as in sim.py), so
+                    while q are in the system only capacity - q more fit; the rest
+                    are dropped
   * reward:         accuracy(a)
                     - beta * expected waiting accumulated during this service / SLA
                     - drop_penalty * expected drops
@@ -98,15 +101,16 @@ def solve_mdp(actions: list[Action], traffic: Traffic, capacity: int, sla_s: flo
     pmfs = [arrival_pmf(a, traffic, kmax) for a in actions]
     lam = traffic.mean_rate
 
+    top = capacity - 1                        # most queries left waiting after a service
     reward = np.zeros((nq, na))
     trans = np.zeros((na, nq, nq))            # trans[a, q, q']
     for j, (a, pmf) in enumerate(zip(actions, pmfs)):
         for q in range(1, nq):
             wait = q * a.mean_s + lam * a.second_moment_s / 2   # query-seconds of waiting
             nxt = q - 1 + np.arange(kmax + 1)
-            drops = np.maximum(0, nxt - capacity) @ pmf
+            drops = np.maximum(0, nxt - top) @ pmf
             reward[q, j] = a.accuracy - beta * wait / sla_s - drop_penalty * drops
-            np.add.at(trans[j, q], np.minimum(nxt, capacity), pmf)
+            np.add.at(trans[j, q], np.minimum(nxt, top), pmf)
     # q = 0: server idles until the next arrival, then q = 1 (no action, no reward)
     v = np.zeros(nq)
     for _ in range(max_iter):

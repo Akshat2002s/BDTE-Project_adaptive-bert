@@ -1,0 +1,7 @@
+precision: fp32 on cuda
+epoch 1/5  val_acc 64.54%  time 210s  peak_mem 2.63 GiB
+epoch 2/5  val_acc 84.92%  time 210s  peak_mem 2.63 GiB
+epoch 3/5  val_acc 88.71%  time 213s  peak_mem 2.63 GiB
+epoch 4/5  val_acc 90.41%  time 211s  peak_mem 2.63 GiB
+epoch 5/5  val_acc 90.61%  time 209s  peak_mem 2.63 GiB
+best val acc 90.61% -> D:\UvA_VU\Period 7\Big Data at the Edge\adaptive-bert\checkpoints\bert-base

@@ -1,5 +1,11 @@
-"""
-Elastic (width x depth) BERT. 
+"""Elastic (width x depth) BERT: one weight file, many operating points.
+
+  * width: fraction of attention heads and FFN neurons kept per layer. Heads and
+    neurons are sorted by importance first, so a smaller width is a prefix slice
+    (a view) of the full weights: nested by construction.
+  * depth: exit heads after EXIT_LAYERS, shared across widths (the hidden size
+    never changes). A query leaves at a forced exit, or at the first exit whose
+    confidence clears a threshold.
 """
 from __future__ import annotations
 
@@ -51,7 +57,7 @@ class ElasticLayer(nn.Module):
         self.head_dim = hidden // heads      # dimension per head
         self.active_heads = heads            # active heads (full width to start)
         self.active_ff = ff                  # active FFN neurons (full width to start)
-        self.head_gate = None                # gates for importance scoring (Step 3)
+        self.head_gate = None                # gates, only set while scoring importance
         self.ff_gate = None
 
     def set_width(self, width: float) -> None:
@@ -101,7 +107,7 @@ class ElasticLayer(nn.Module):
 
 
 class ExitHead(nn.Module):
-    """BERT pooler ([CLS] -> dense -> tanh) + classifier. Provided: it is BERT's own head."""
+    """BERT's own head: pooler ([CLS] -> dense -> tanh) + classifier."""
 
     def __init__(self, hidden: int, num_labels: int, dropout: float):
         super().__init__()
@@ -112,6 +118,8 @@ class ExitHead(nn.Module):
     def forward(self, hidden_states: torch.Tensor) -> torch.Tensor:
         pooled = torch.tanh(self.pooler(hidden_states[:, 0]))
         return self.classifier(self.dropout(pooled))
+
+
 class ElasticBert(nn.Module):
 
     def __init__(self, num_labels: int, config: BertConfig | None = None,
@@ -204,9 +212,10 @@ class ElasticBert(nn.Module):
             alive, x, mask_bias = alive[keep], x[keep], mask_bias[keep]
         return ElasticOutput(logits, exit_t)
 
-    # -- Step 3 ---------------------------------------------------------------
+    # -- importance ordering ---------------------------------------------------
     def compute_importance(self, batches, device) -> tuple[torch.Tensor, torch.Tensor]:
-        """Head and FFN-neuron importance."""
+        """Head and FFN-neuron importance: |d loss / d gate| summed over `batches`
+        (Michel et al. 2019), at full width with dropout off."""
         self.set_width(1.0)
         was_training = self.training
         self.eval()  # no dropout noise in the scores
@@ -267,7 +276,7 @@ class ElasticBert(nn.Module):
         return model
 
     def save(self, out_dir: str | Path) -> None:
-        """Provided. elastic.pt + elastic_config.json."""
+        """Write elastic.pt (weights) + elastic_config.json (architecture)."""
         out_dir = Path(out_dir)
         out_dir.mkdir(parents=True, exist_ok=True)
         torch.save(self.state_dict(), out_dir / "elastic.pt")
@@ -277,7 +286,7 @@ class ElasticBert(nn.Module):
 
     @classmethod
     def load(cls, out_dir: str | Path, map_location="cpu") -> "ElasticBert":
-        """Provided."""
+        """Inverse of save()."""
         out_dir = Path(out_dir)
         meta = json.loads((out_dir / "elastic_config.json").read_text(encoding="utf-8"))
         model = cls(meta["num_labels"], BertConfig.from_dict(meta["bert"]),

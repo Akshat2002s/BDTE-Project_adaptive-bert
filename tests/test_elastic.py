@@ -139,7 +139,7 @@ def test_exit_head_flops(pair):
 
 
 def test_layer_matches_hf_layer():
-    """Step 1 on its own: one ElasticLayer at full width = one Hugging Face BertLayer."""
+    """One ElasticLayer at full width = one Hugging Face BertLayer."""
     from abert.elastic import ElasticLayer
     hf = tiny_hf()
     ref = hf.bert.encoder.layer[0]

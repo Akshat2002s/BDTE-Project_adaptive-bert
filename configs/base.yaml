@@ -24,7 +24,7 @@ train:
 baselines:
   bert-base:
     hf_name: bert-base-uncased
-    lr: 3.0e-5
+    lr: 5.0e-5     # was 3.0e-5 (90.61% val, kept in checkpoints/bert-base-lr3e-5); raised to match distilbert
     epochs: 5
     batch_size: 32
   distilbert:
@@ -43,7 +43,7 @@ elastic:
   importance_batches: 50     # train batches used to rank heads / FFN neurons
   sandwich_random: 1         # middle widths sampled per step besides the largest and smallest
   lr: 2.0e-5
-  epochs: 3
+  epochs: 10                 # was 3 (checkpoints/elastic-3ep, the reference for the 3-epoch ablations)
   batch_size: 32
   kd_alpha: 0.5              # loss = alpha * KD + (1 - alpha) * CE, on every exit
   kd_temperature: 2.0
