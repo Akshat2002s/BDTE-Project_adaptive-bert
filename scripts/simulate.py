@@ -2,10 +2,16 @@
 
     python scripts/simulate.py                 # uses results/elastic_table.json + _examples.npz
     python scripts/simulate.py --name elastic
+    python scripts/simulate.py --sweep         # repeat over sim.sweep_burst_loads
 
 Controller inputs come from the val split (accuracy, exit fractions); the
 simulation draws real test queries, so the reported accuracy is on test.
-Writes results/sim_<name>.json and results/sim_<name>.png.
+Writes results/sim_<name>.json and results/sim_<name>.png (single run), or
+results/sim_sweep_<name>.json and .png (sweep). In the sweep the MDP uses
+sim.beta_main, fixed in advance, while the "best fixed point" is picked with
+hindsight per load (an oracle), so any MDP advantage over it is conservative.
+The sweep also runs one MDP solved for the nominal sim.burst_load only, unchanged
+at every load, to test robustness to traffic it was not solved for.
 """
 from __future__ import annotations
 
@@ -18,7 +24,7 @@ import numpy as np
 
 from abert.controller import Action, Traffic, pareto_actions, sla_greedy, solve_mdp
 from abert.sim import ServedPoint, mmpp_arrivals, simulate
-from abert.utils import load_config, resolve
+from abert.utils import Tee, load_config, resolve, run_info
 
 
 class Fixed:
@@ -54,27 +60,25 @@ def load_points(name: str):
     return table, actions, served
 
 
-def main() -> None:
-    cfg = load_config()
-    sc = cfg["sim"]
-    p = argparse.ArgumentParser()
-    p.add_argument("--name", default=cfg["elastic"]["out_dir"].rstrip("/").split("/")[-1])
-    args = p.parse_args()
-
-    table, actions, served = load_points(args.name)
+def evaluate(name: str, table, actions, served, sc: dict, burst_load: float, verbose: bool = True,
+             extra_policies: dict | None = None):
+    """Run every policy (fixed Pareto points, the full model, the greedy rule, the MDP
+    for each beta, plus `extra_policies`) at one burst load.
+    Returns (results, mdps, candidates, mu)."""
     widths, exits = table["widths"], table["exits"]
-    full = actions[f"{args.name}-w{max(widths)}-exit{max(exits)}"]
+    full = actions[f"{name}-w{max(widths)}-exit{max(exits)}"]
     mu = 1.0 / full.mean_s
-    calm, burst = sc["calm_load"] * mu, sc["burst_load"] * mu
+    calm, burst = sc["calm_load"] * mu, burst_load * mu
     traffic = Traffic.two_state(calm, burst, sc["calm_mean_s"], sc["burst_mean_s"])
     sla_s, cap = sc["sla_ms"] / 1000.0, sc["queue_capacity"]
     print(f"full model serves {mu:.2f} q/s; calm {calm:.2f} q/s, burst {burst:.2f} q/s, "
           f"mean load {traffic.mean_rate / mu:.2f}x of full-model capacity")
 
     candidates = pareto_actions(list(actions.values()))
-    print(f"{len(candidates)} Pareto-optimal operating points on val (of {len(actions)}):")
-    for a in candidates:
-        print(f"  {a.name:32s} val acc {100 * a.accuracy:6.2f}%  mean service {1000 * a.mean_s:6.1f} ms")
+    if verbose:
+        print(f"{len(candidates)} Pareto-optimal operating points on val (of {len(actions)}):")
+        for a in candidates:
+            print(f"  {a.name:32s} val acc {100 * a.accuracy:6.2f}%  mean service {1000 * a.mean_s:6.1f} ms")
 
     policies = {f"fixed: {a.name}": Fixed(a) for a in candidates}
     if full.name not in {a.name for a in candidates}:
@@ -85,6 +89,7 @@ def main() -> None:
         pol = solve_mdp(candidates, traffic, cap, sla_s, beta, sc["drop_penalty"])
         mdps[beta] = pol
         policies[f"MDP beta={beta}"] = pol
+    policies.update(extra_policies or {})
 
     results = {}
     for label, pol in policies.items():
@@ -103,12 +108,123 @@ def main() -> None:
                 mix[k] = mix.get(k, 0) + v
         tot = sum(mix.values())
         results[label]["choice_mix"] = {k: v / tot for k, v in sorted(mix.items(), key=lambda kv: -kv[1])}
+    return results, mdps, candidates, mu
 
+
+def print_results(results: dict) -> None:
     print(f"\n{'policy':42s} {'acc':>6s} {'eff.acc':>7s} {'drop%':>6s} {'SLA%':>6s} "
           f"{'p95 ms':>8s} {'GFLOPs':>7s}")
     for label, r in results.items():
         print(f"{label:42s} {r['accuracy']:6.2f} {r['effective_accuracy']:7.2f} {r['drop_rate']:6.2f} "
               f"{r['sla_violation']:6.2f} {r['resp_ms_p95']:8.0f} {r['gflops_mean']:7.2f}")
+
+
+def best_fixed(results: dict, max_sla: float | None = None) -> tuple[str, dict] | None:
+    """Oracle static baseline: the fixed point with the highest effective accuracy,
+    optionally only among those with at most `max_sla` % SLA violations. Chosen with
+    hindsight from the simulation itself, so it is the strongest possible static rival."""
+    fixed = {l: r for l, r in results.items() if l.startswith("fixed")
+             and (max_sla is None or r["sla_violation"] <= max_sla)}
+    if not fixed:
+        return None
+    label = max(fixed, key=lambda l: fixed[l]["effective_accuracy"])
+    return label, fixed[label]
+
+
+def sweep(name: str, table, actions, served, sc: dict, loads: list[float]) -> None:
+    beta = sc["beta_main"]
+    # Robustness check: one MDP solved for the nominal burst load only, then used
+    # unchanged at every load (what you could deploy without knowing future traffic).
+    nominal = sc["burst_load"]
+    full = actions[f"{name}-w{max(table['widths'])}-exit{max(table['exits'])}"]
+    mu = 1.0 / full.mean_s
+    nominal_traffic = Traffic.two_state(sc["calm_load"] * mu, nominal * mu,
+                                        sc["calm_mean_s"], sc["burst_mean_s"])
+    fixed_mdp_label = f"MDP beta={beta} solved for {nominal}x only"
+    fixed_mdp = solve_mdp(pareto_actions(list(actions.values())), nominal_traffic,
+                          sc["queue_capacity"], sc["sla_ms"] / 1000.0, beta, sc["drop_penalty"])
+    rows = []
+    for load in loads:
+        print(f"\n================ burst load {load}x full-model capacity ================")
+        results, _, _, _ = evaluate(name, table, actions, served, sc, load, verbose=False,
+                                    extra_policies={fixed_mdp_label: fixed_mdp})
+        print_results(results)
+        fixed_any = best_fixed(results)
+        fixed_ok = best_fixed(results, max_sla=1.0)
+        rows.append({"burst_load": load, "results": results,
+                     "best_fixed": fixed_any[0], "best_fixed_sla_ok": fixed_ok[0] if fixed_ok else None})
+
+    def pick(row, label):
+        return row["results"][label] if label else None
+
+    print(f"\n================ summary (MDP beta={beta} fixed in advance; best fixed = oracle "
+          f"meeting the SLA, i.e. <= 1% violations) ================")
+    print(f"{'load':>5s} | {'best fixed meeting SLA (oracle)':38s} {'eff.acc':>7s} {'SLA%':>5s} {'GF':>5s} | "
+          f"{'greedy':>7s} {'SLA%':>5s} {'GF':>5s} | {'MDP':>7s} {'SLA%':>5s} {'GF':>5s} | "
+          f"{f'MDP@{nominal}x':>8s} {'SLA%':>5s} {'GF':>5s}")
+    for row in rows:
+        f, g, m, n = (pick(row, row["best_fixed_sla_ok"]), row["results"]["greedy SLA rule"],
+                      row["results"][f"MDP beta={beta}"], row["results"][fixed_mdp_label])
+        fixed = (f"{row['best_fixed_sla_ok'].replace('fixed: ', ''):38s} {f['effective_accuracy']:7.2f} "
+                 f"{f['sla_violation']:5.1f} {f['gflops_mean']:5.2f}" if f else f"{'(none meets the SLA)':58s}")
+        print(f"{row['burst_load']:5.1f} | {fixed} | "
+              f"{g['effective_accuracy']:7.2f} {g['sla_violation']:5.1f} {g['gflops_mean']:5.2f} | "
+              f"{m['effective_accuracy']:7.2f} {m['sla_violation']:5.1f} {m['gflops_mean']:5.2f} | "
+              f"{n['effective_accuracy']:8.2f} {n['sla_violation']:5.1f} {n['gflops_mean']:5.2f}")
+
+    out = resolve("results")
+    (out / f"sim_sweep_{name}.json").write_text(json.dumps({
+        "config": sc, "beta_main": beta, "loads": loads, "nominal_load_for_fixed_mdp": nominal,
+        "fixed_mdp_policy": [fixed_mdp.actions[c].name for c in fixed_mdp.choice[1:]],
+        "rows": rows}, indent=1), encoding="utf-8")
+
+    fig, (ax, ax2) = plt.subplots(1, 2, figsize=(12, 4.5))
+    x = [r["burst_load"] for r in rows]
+    series = {
+        "best fixed point meeting SLA (oracle)": ([pick(r, r["best_fixed_sla_ok"]) for r in rows], "s-", "#7a7a7a"),
+        "most accurate fixed point, any SLA (oracle)": ([pick(r, r["best_fixed"]) for r in rows], "s--", "#b5b5b5"),
+        "greedy SLA rule": ([r["results"]["greedy SLA rule"] for r in rows], "^-", "#d08a1e"),
+        f"MDP (beta={beta}), re-solved per load": ([r["results"][f"MDP beta={beta}"] for r in rows], "o-", "#2a6fdb"),
+        f"MDP (beta={beta}), solved for {nominal}x only": ([r["results"][fixed_mdp_label] for r in rows], "o:", "#7fb0f5"),
+    }
+    for label, (vals, style, color) in series.items():
+        pts = [(xi, v) for xi, v in zip(x, vals) if v is not None]
+        ax.plot([p[0] for p in pts], [p[1]["effective_accuracy"] for p in pts], style, color=color, label=label)
+        ax2.plot([p[0] for p in pts], [p[1]["sla_violation"] for p in pts], style, color=color, label=label)
+    ax.set_xlabel("burst load (x full-model capacity)")
+    ax.set_ylabel("effective test accuracy (%, drops count as wrong)")
+    ax.set_title("Accuracy under increasing burst load")
+    ax2.set_xlabel("burst load (x full-model capacity)")
+    ax2.set_ylabel(f"SLA violations incl. drops (%, SLA {sc['sla_ms']} ms)")
+    ax2.set_title("SLA violations under increasing burst load")
+    for a in (ax, ax2):
+        a.grid(alpha=0.3)
+        a.legend(fontsize=8)
+    fig.tight_layout()
+    fig.savefig(out / f"sim_sweep_{name}.png", dpi=200)
+    print(f"wrote {out / f'sim_sweep_{name}.json'} and {out / f'sim_sweep_{name}.png'}")
+
+
+def main() -> None:
+    cfg = load_config()
+    sc = cfg["sim"]
+    p = argparse.ArgumentParser()
+    p.add_argument("--name", default=cfg["elastic"]["out_dir"].rstrip("/").split("/")[-1])
+    p.add_argument("--sweep", action="store_true",
+                   help="repeat the simulation over sim.sweep_burst_loads and summarise")
+    args = p.parse_args()
+
+    tag = "sweep_" if args.sweep else ""
+    Tee(resolve("logs") / f"simulate_{tag}{args.name}.log")
+    print(f"=== simulate {json.dumps({'name': args.name, 'sweep': args.sweep, 'sim': sc, **run_info()})}")
+    table, actions, served = load_points(args.name)
+    if args.sweep:
+        sweep(args.name, table, actions, served, sc, sc["sweep_burst_loads"])
+        return
+
+    results, mdps, candidates, mu = evaluate(args.name, table, actions, served, sc, sc["burst_load"])
+    sla_s, cap = sc["sla_ms"] / 1000.0, sc["queue_capacity"]
+    print_results(results)
 
     out = resolve("results")
     policy_tables = {str(b): [pol.actions[c].name for c in pol.choice[1:]] for b, pol in mdps.items()}

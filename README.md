@@ -41,7 +41,8 @@ python scripts/measure.py checkpoints/bert-base --name bert-base
 python scripts/train_elastic.py                # -> checkpoints/elastic (teacher: checkpoints/bert-base)
 python scripts/measure_elastic.py              # every (width, exit) and (width, threshold) point
 python scripts/simulate.py                     # bursty traffic: fixed points vs greedy rule vs MDP
-python scripts/plot_pareto.py                  # results/pareto_test.png
+python scripts/simulate.py --sweep             # same, over sim.sweep_burst_loads (+ MDP robustness check)
+python scripts/plot_pareto.py                  # results/pareto_test.png (--split val for pareto_val.png)
 ```
 
 Ablations: `train_elastic.py --no-kd --out checkpoints/elastic-nokd` and
@@ -109,7 +110,9 @@ refer to the models now in the `-lr3e-5` / `-3ep` folders below.
 | Ablation: random order, 3 epochs | `elastic-random` | `logs/train_elastic-random.log` | Mean val 79.85% vs 83.10%: importance ordering helps, most at narrow widths |
 | BERT-base, lr 5e-5, failed | `bert-base-lr5e-5_failed-oom` | `logs/train_bert-base-lr5e-5_failed-oom.log` | Crashed saving epoch 2 (laptop out of RAM + page file); folder is inconsistent, see `FAILED.txt` |
 | BERT-base, lr 5e-5 (final) | `bert-base` | `logs/*bert-base.log` | Final static baseline and distillation teacher |
-| Elastic, 10 epochs (final) | `elastic` | `logs/*elastic.log`, `results/elastic_*` | Final adaptive model |
+| Elastic, 10 epochs (final) | `elastic` | `logs/*elastic.log`, `results/elastic_*`, `results/pareto_{test,val}.png` | Final adaptive model; frontier beats both static baselines |
+| Serving simulation, burst load 2x | (uses `elastic`) | `logs/simulate_elastic.log`, `results/sim_elastic.*` | MDP meets the SLA but only ties the best fixed point: bursts too mild for the fast threshold points |
+| Load sweep, 2x to 8x | (uses `elastic`) | `logs/simulate_sweep_elastic.log`, `results/sim_sweep_elastic.*` | MDP (beta 0.2, fixed in advance) meets the SLA at every load and beats the best SLA-meeting fixed point (oracle) by up to +0.75 pts; an MDP solved for 2x only does the same, so it is robust to load it was not solved for |
 
 ## Decided
 

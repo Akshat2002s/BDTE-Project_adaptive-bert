@@ -65,3 +65,5 @@ sim:
   seeds: [0, 1, 2, 3, 4]
   betas: [0.0, 0.05, 0.1, 0.2, 0.5, 1.0]  # MDP waiting-cost weight: 1 = waiting one full SLA costs as much as a wrong answer
   drop_penalty: 1.0          # MDP cost of one dropped query (in accuracy units, 1 = 100%)
+  beta_main: 0.2             # the beta reported in the load sweep, fixed in advance (not tuned on results)
+  sweep_burst_loads: [2.0, 3.0, 4.0, 5.0, 6.0, 8.0]  # burst rate as x full-model capacity (scripts/simulate.py --sweep)

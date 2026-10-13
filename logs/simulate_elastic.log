@@ -1,0 +1,72 @@
+=== simulate {"name": "elastic", "sim": {"calm_load": 0.5, "burst_load": 2.0, "calm_mean_s": 20.0, "burst_mean_s": 5.0, "queue_capacity": 50, "sla_ms": 500, "duration_s": 3600, "seeds": [0, 1, 2, 3, 4], "betas": [0.0, 0.05, 0.1, 0.2, 0.5, 1.0], "drop_penalty": 1.0}, "time": "2026-10-13T03:52:12", "host": "LAPTOP-5OAB11N8", "torch": "2.14.0+cu126", "transformers": "5.18.0", "gpu": "NVIDIA GeForce GTX 1650", "git_commit": "4bfaf15"}
+full model serves 11.33 q/s; calm 5.67 q/s, burst 22.66 q/s, mean load 0.80x of full-model capacity
+11 Pareto-optimal operating points on val (of 48):
+  elastic-w0.25-exit4              val acc  87.41%  mean service    9.0 ms
+  elastic-w0.25-thr0.5             val acc  89.61%  mean service   10.3 ms
+  elastic-w0.25-thr0.6             val acc  90.01%  mean service   11.3 ms
+  elastic-w0.25-thr0.7             val acc  90.31%  mean service   12.4 ms
+  elastic-w0.25-thr0.8             val acc  90.71%  mean service   14.0 ms
+  elastic-w0.5-thr0.6              val acc  92.01%  mean service   18.1 ms
+  elastic-w0.5-thr0.7              val acc  92.11%  mean service   19.6 ms
+  elastic-w0.5-thr0.8              val acc  92.61%  mean service   21.4 ms
+  elastic-w0.75-thr0.7             val acc  93.01%  mean service   28.2 ms
+  elastic-w0.75-thr0.8             val acc  93.21%  mean service   30.7 ms
+  elastic-w0.75-thr0.95            val acc  93.31%  mean service   47.6 ms
+
+policy                                        acc eff.acc  drop%   SLA%   p95 ms  GFLOPs
+fixed: elastic-w0.25-exit4                  86.09   86.09   0.00   0.00       15    0.92
+fixed: elastic-w0.25-thr0.5                 89.84   89.84   0.00   0.00       25    1.12
+fixed: elastic-w0.25-thr0.6                 91.02   91.02   0.00   0.00       26    1.23
+fixed: elastic-w0.25-thr0.7                 91.37   91.37   0.00   0.00       27    1.34
+fixed: elastic-w0.25-thr0.8                 91.72   91.72   0.00   0.00       32    1.54
+fixed: elastic-w0.5-thr0.6                  91.27   91.27   0.00   0.00       48    2.23
+fixed: elastic-w0.5-thr0.7                  91.84   91.84   0.00   0.00       55    2.40
+fixed: elastic-w0.5-thr0.8                  92.13   92.13   0.00   0.00       67    2.68
+fixed: elastic-w0.75-thr0.7                 92.28   92.28   0.00   0.00      113    3.47
+fixed: elastic-w0.75-thr0.8                 92.70   92.70   0.00   0.00      150    3.82
+fixed: elastic-w0.75-thr0.95                92.76   92.56   0.22  24.61     1516    5.88
+fixed: elastic-w1.0-exit12                  93.06   82.14  11.74  56.44     4387   11.02
+greedy SLA rule                             92.76   92.76   0.00   4.22      490    5.69
+MDP beta=0.0                                92.76   92.73   0.04  24.38     1502    5.87
+MDP beta=0.05                               92.76   92.76   0.00  22.15      790    5.78
+MDP beta=0.1                                92.76   92.76   0.00   6.48      517    5.70
+MDP beta=0.2                                92.73   92.73   0.00   0.00      309    5.59
+MDP beta=0.5                                92.67   92.67   0.00   0.00      152    5.34
+MDP beta=1.0                                92.52   92.52   0.00   0.00      107    5.02
+wrote D:\UvA_VU\Period 7\Big Data at the Edge\BDTE Project_adaptive-bert\results\sim_elastic.json and D:\UvA_VU\Period 7\Big Data at the Edge\BDTE Project_adaptive-bert\results\sim_elastic.png
+=== simulate {"name": "elastic", "sweep": false, "sim": {"calm_load": 0.5, "burst_load": 2.0, "calm_mean_s": 20.0, "burst_mean_s": 5.0, "queue_capacity": 50, "sla_ms": 500, "duration_s": 3600, "seeds": [0, 1, 2, 3, 4], "betas": [0.0, 0.05, 0.1, 0.2, 0.5, 1.0], "drop_penalty": 1.0, "beta_main": 0.2, "sweep_burst_loads": [2.0, 3.0, 4.0, 5.0, 6.0, 8.0]}, "time": "2026-10-13T04:11:02", "host": "LAPTOP-5OAB11N8", "torch": "2.14.0+cu126", "transformers": "5.18.0", "gpu": "NVIDIA GeForce GTX 1650", "git_commit": "4bfaf15"}
+full model serves 11.33 q/s; calm 5.67 q/s, burst 22.66 q/s, mean load 0.80x of full-model capacity
+11 Pareto-optimal operating points on val (of 48):
+  elastic-w0.25-exit4              val acc  87.41%  mean service    9.0 ms
+  elastic-w0.25-thr0.5             val acc  89.61%  mean service   10.3 ms
+  elastic-w0.25-thr0.6             val acc  90.01%  mean service   11.3 ms
+  elastic-w0.25-thr0.7             val acc  90.31%  mean service   12.4 ms
+  elastic-w0.25-thr0.8             val acc  90.71%  mean service   14.0 ms
+  elastic-w0.5-thr0.6              val acc  92.01%  mean service   18.1 ms
+  elastic-w0.5-thr0.7              val acc  92.11%  mean service   19.6 ms
+  elastic-w0.5-thr0.8              val acc  92.61%  mean service   21.4 ms
+  elastic-w0.75-thr0.7             val acc  93.01%  mean service   28.2 ms
+  elastic-w0.75-thr0.8             val acc  93.21%  mean service   30.7 ms
+  elastic-w0.75-thr0.95            val acc  93.31%  mean service   47.6 ms
+
+policy                                        acc eff.acc  drop%   SLA%   p95 ms  GFLOPs
+fixed: elastic-w0.25-exit4                  86.09   86.09   0.00   0.00       15    0.92
+fixed: elastic-w0.25-thr0.5                 89.84   89.84   0.00   0.00       25    1.12
+fixed: elastic-w0.25-thr0.6                 91.02   91.02   0.00   0.00       26    1.23
+fixed: elastic-w0.25-thr0.7                 91.37   91.37   0.00   0.00       27    1.34
+fixed: elastic-w0.25-thr0.8                 91.72   91.72   0.00   0.00       32    1.54
+fixed: elastic-w0.5-thr0.6                  91.27   91.27   0.00   0.00       48    2.23
+fixed: elastic-w0.5-thr0.7                  91.84   91.84   0.00   0.00       55    2.40
+fixed: elastic-w0.5-thr0.8                  92.13   92.13   0.00   0.00       67    2.68
+fixed: elastic-w0.75-thr0.7                 92.28   92.28   0.00   0.00      113    3.47
+fixed: elastic-w0.75-thr0.8                 92.70   92.70   0.00   0.00      150    3.82
+fixed: elastic-w0.75-thr0.95                92.76   92.56   0.22  24.61     1516    5.88
+fixed: elastic-w1.0-exit12                  93.06   82.14  11.74  56.44     4387   11.02
+greedy SLA rule                             92.76   92.76   0.00   4.22      490    5.69
+MDP beta=0.0                                92.76   92.73   0.04  24.38     1502    5.87
+MDP beta=0.05                               92.76   92.76   0.00  22.15      790    5.78
+MDP beta=0.1                                92.76   92.76   0.00   6.48      517    5.70
+MDP beta=0.2                                92.73   92.73   0.00   0.00      309    5.59
+MDP beta=0.5                                92.67   92.67   0.00   0.00      152    5.34
+MDP beta=1.0                                92.52   92.52   0.00   0.00      107    5.02
+wrote D:\UvA_VU\Period 7\Big Data at the Edge\BDTE Project_adaptive-bert\results\sim_elastic.json and D:\UvA_VU\Period 7\Big Data at the Edge\BDTE Project_adaptive-bert\results\sim_elastic.png

@@ -1,0 +1,471 @@
+=== simulate {"name": "elastic", "sweep": true, "sim": {"calm_load": 0.5, "burst_load": 2.0, "calm_mean_s": 20.0, "burst_mean_s": 5.0, "queue_capacity": 50, "sla_ms": 500, "duration_s": 3600, "seeds": [0, 1, 2, 3, 4], "betas": [0.0, 0.05, 0.1, 0.2, 0.5, 1.0], "drop_penalty": 1.0, "beta_main": 0.2, "sweep_burst_loads": [2.0, 3.0, 4.0, 5.0, 6.0, 8.0]}, "time": "2026-10-13T04:11:34", "host": "LAPTOP-5OAB11N8", "torch": "2.14.0+cu126", "transformers": "5.18.0", "gpu": "NVIDIA GeForce GTX 1650", "git_commit": "4bfaf15"}
+
+================ burst load 2.0x full-model capacity ================
+full model serves 11.33 q/s; calm 5.67 q/s, burst 22.66 q/s, mean load 0.80x of full-model capacity
+
+policy                                        acc eff.acc  drop%   SLA%   p95 ms  GFLOPs
+fixed: elastic-w0.25-exit4                  86.09   86.09   0.00   0.00       15    0.92
+fixed: elastic-w0.25-thr0.5                 89.84   89.84   0.00   0.00       25    1.12
+fixed: elastic-w0.25-thr0.6                 91.02   91.02   0.00   0.00       26    1.23
+fixed: elastic-w0.25-thr0.7                 91.37   91.37   0.00   0.00       27    1.34
+fixed: elastic-w0.25-thr0.8                 91.72   91.72   0.00   0.00       32    1.54
+fixed: elastic-w0.5-thr0.6                  91.27   91.27   0.00   0.00       48    2.23
+fixed: elastic-w0.5-thr0.7                  91.84   91.84   0.00   0.00       55    2.40
+fixed: elastic-w0.5-thr0.8                  92.13   92.13   0.00   0.00       67    2.68
+fixed: elastic-w0.75-thr0.7                 92.28   92.28   0.00   0.00      113    3.47
+fixed: elastic-w0.75-thr0.8                 92.70   92.70   0.00   0.00      150    3.82
+fixed: elastic-w0.75-thr0.95                92.76   92.56   0.22  24.61     1516    5.88
+fixed: elastic-w1.0-exit12                  93.06   82.14  11.74  56.44     4387   11.02
+greedy SLA rule                             92.76   92.76   0.00   4.22      490    5.69
+MDP beta=0.0                                92.76   92.73   0.04  24.38     1502    5.87
+MDP beta=0.05                               92.76   92.76   0.00  22.15      790    5.78
+MDP beta=0.1                                92.76   92.76   0.00   6.48      517    5.70
+MDP beta=0.2                                92.73   92.73   0.00   0.00      309    5.59
+MDP beta=0.5                                92.67   92.67   0.00   0.00      152    5.34
+MDP beta=1.0                                92.52   92.52   0.00   0.00      107    5.02
+
+================ burst load 3.0x full-model capacity ================
+full model serves 11.33 q/s; calm 5.67 q/s, burst 33.99 q/s, mean load 1.00x of full-model capacity
+
+policy                                        acc eff.acc  drop%   SLA%   p95 ms  GFLOPs
+fixed: elastic-w0.25-exit4                  86.08   86.08   0.00   0.00       17    0.92
+fixed: elastic-w0.25-thr0.5                 89.86   89.86   0.00   0.00       27    1.12
+fixed: elastic-w0.25-thr0.6                 91.02   91.02   0.00   0.00       31    1.23
+fixed: elastic-w0.25-thr0.7                 91.36   91.36   0.00   0.00       35    1.34
+fixed: elastic-w0.25-thr0.8                 91.70   91.70   0.00   0.00       44    1.54
+fixed: elastic-w0.5-thr0.6                  91.28   91.28   0.00   0.00       74    2.23
+fixed: elastic-w0.5-thr0.7                  91.82   91.82   0.00   0.00       92    2.40
+fixed: elastic-w0.5-thr0.8                  92.11   92.11   0.00   0.00      130    2.68
+fixed: elastic-w0.75-thr0.7                 92.27   92.26   0.01   6.77      566    3.47
+fixed: elastic-w0.75-thr0.8                 92.68   92.30   0.40  23.83     1221    3.82
+fixed: elastic-w0.75-thr0.95                92.77   81.99  11.62  55.24     2451    5.88
+fixed: elastic-w1.0-exit12                  93.05   67.30  27.67  69.37     4416   11.02
+greedy SLA rule                             92.60   92.60   0.00  14.56      562    4.74
+MDP beta=0.0                                92.59   91.08   1.63  55.05     1869    5.25
+MDP beta=0.05                               92.59   92.59   0.00  48.56      788    4.85
+MDP beta=0.1                                92.55   92.55   0.00   5.95      510    4.72
+MDP beta=0.2                                92.48   92.48   0.00   0.00      309    4.62
+MDP beta=0.5                                92.29   92.29   0.00   0.00      175    4.51
+MDP beta=1.0                                92.13   92.13   0.00   0.00      108    4.29
+
+================ burst load 4.0x full-model capacity ================
+full model serves 11.33 q/s; calm 5.67 q/s, burst 45.32 q/s, mean load 1.20x of full-model capacity
+
+policy                                        acc eff.acc  drop%   SLA%   p95 ms  GFLOPs
+fixed: elastic-w0.25-exit4                  86.11   86.11   0.00   0.00       21    0.92
+fixed: elastic-w0.25-thr0.5                 89.88   89.88   0.00   0.00       33    1.12
+fixed: elastic-w0.25-thr0.6                 91.04   91.04   0.00   0.00       40    1.23
+fixed: elastic-w0.25-thr0.7                 91.38   91.38   0.00   0.00       48    1.34
+fixed: elastic-w0.25-thr0.8                 91.72   91.72   0.00   0.00       63    1.54
+fixed: elastic-w0.5-thr0.6                  91.29   91.29   0.00   0.01      155    2.23
+fixed: elastic-w0.5-thr0.7                  91.82   91.82   0.00   0.09      245    2.40
+fixed: elastic-w0.5-thr0.8                  92.11   92.04   0.08   8.85      638    2.68
+fixed: elastic-w0.75-thr0.7                 92.28   86.23   6.56  49.96     1449    3.47
+fixed: elastic-w0.75-thr0.8                 92.69   83.19  10.25  55.72     1617    3.82
+fixed: elastic-w0.75-thr0.95                92.74   69.30  25.27  66.10     2503    5.88
+fixed: elastic-w1.0-exit12                  93.04   55.69  40.14  75.68     4427   11.02
+greedy SLA rule                             92.36   92.36   0.00  19.69      575    3.97
+MDP beta=0.0                                92.31   89.86   2.66  65.88     1717    4.46
+MDP beta=0.05                               92.32   92.32   0.00  51.97      715    4.06
+MDP beta=0.1                                92.27   92.27   0.00   2.85      464    3.94
+MDP beta=0.2                                92.16   92.16   0.00   0.05      308    3.85
+MDP beta=0.5                                91.95   91.95   0.00   0.00      162    3.75
+MDP beta=1.0                                91.71   91.71   0.00   0.00      110    3.64
+
+================ burst load 5.0x full-model capacity ================
+full model serves 11.33 q/s; calm 5.67 q/s, burst 56.65 q/s, mean load 1.40x of full-model capacity
+
+policy                                        acc eff.acc  drop%   SLA%   p95 ms  GFLOPs
+fixed: elastic-w0.25-exit4                  86.12   86.12   0.00   0.00       25    0.92
+fixed: elastic-w0.25-thr0.5                 89.88   89.88   0.00   0.00       43    1.12
+fixed: elastic-w0.25-thr0.6                 91.04   91.04   0.00   0.00       55    1.23
+fixed: elastic-w0.25-thr0.7                 91.38   91.38   0.00   0.00       70    1.34
+fixed: elastic-w0.25-thr0.8                 91.71   91.71   0.00   0.00      111    1.54
+fixed: elastic-w0.5-thr0.6                  91.29   90.93   0.39  15.34      742    2.23
+fixed: elastic-w0.5-thr0.7                  91.82   89.95   2.04  34.27      951    2.40
+fixed: elastic-w0.5-thr0.8                  92.11   86.35   6.25  49.11     1119    2.68
+fixed: elastic-w0.75-thr0.7                 92.27   76.20  17.42  62.11     1488    3.47
+fixed: elastic-w0.75-thr0.8                 92.69   73.03  21.21  64.48     1649    3.82
+fixed: elastic-w0.75-thr0.95                92.74   60.50  34.76  70.52     2514    5.88
+fixed: elastic-w1.0-exit12                  93.03   48.72  47.63  78.28     4427   11.02
+greedy SLA rule                             92.11   92.11   0.00  18.82      568    3.44
+MDP beta=0.0                                92.05   89.54   2.73  70.17     1542    3.86
+MDP beta=0.05                               91.95   91.95   0.00  44.67      650    3.51
+MDP beta=0.1                                91.89   91.89   0.00   1.76      414    3.41
+MDP beta=0.2                                91.80   91.80   0.00   0.03      267    3.32
+MDP beta=0.5                                91.58   91.58   0.00   0.00      154    3.23
+MDP beta=1.0                                91.31   91.31   0.00   0.00      109    3.16
+
+================ burst load 6.0x full-model capacity ================
+full model serves 11.33 q/s; calm 5.67 q/s, burst 67.98 q/s, mean load 1.60x of full-model capacity
+
+policy                                        acc eff.acc  drop%   SLA%   p95 ms  GFLOPs
+fixed: elastic-w0.25-exit4                  86.13   86.13   0.00   0.00       33    0.92
+fixed: elastic-w0.25-thr0.5                 89.89   89.89   0.00   0.00       63    1.12
+fixed: elastic-w0.25-thr0.6                 91.04   91.04   0.00   0.00       88    1.23
+fixed: elastic-w0.25-thr0.7                 91.38   91.38   0.00   0.00      137    1.34
+fixed: elastic-w0.25-thr0.8                 91.72   91.69   0.04   1.81      382    1.54
+fixed: elastic-w0.5-thr0.6                  91.29   84.11   7.87  52.00      942    2.23
+fixed: elastic-w0.5-thr0.7                  91.81   81.48  11.26  57.38     1025    2.40
+fixed: elastic-w0.5-thr0.8                  92.11   77.08  16.32  62.68     1152    2.68
+fixed: elastic-w0.75-thr0.7                 92.28   67.14  27.24  69.24     1507    3.47
+fixed: elastic-w0.75-thr0.8                 92.68   64.12  30.82  70.72     1671    3.82
+fixed: elastic-w0.75-thr0.95                92.75   52.84  43.03  75.33     2529    5.88
+fixed: elastic-w1.0-exit12                  93.05   42.28  54.56  82.07     4432   11.02
+greedy SLA rule                             91.98   91.97   0.01  18.82      566    2.93
+MDP beta=0.0                                91.57   87.16   4.81  74.86     1413    3.41
+MDP beta=0.05                               91.68   91.68   0.00  27.26      601    3.00
+MDP beta=0.1                                91.62   91.62   0.00   1.40      374    2.90
+MDP beta=0.2                                91.50   91.50   0.00   0.02      238    2.82
+MDP beta=0.5                                91.20   91.20   0.00   0.00      149    2.76
+MDP beta=1.0                                90.88   90.88   0.00   0.00      108    2.71
+
+================ burst load 8.0x full-model capacity ================
+full model serves 11.33 q/s; calm 5.67 q/s, burst 90.64 q/s, mean load 2.00x of full-model capacity
+
+policy                                        acc eff.acc  drop%   SLA%   p95 ms  GFLOPs
+fixed: elastic-w0.25-exit4                  86.14   86.14   0.00   0.00       67    0.92
+fixed: elastic-w0.25-thr0.5                 89.92   89.87   0.06   0.44      312    1.12
+fixed: elastic-w0.25-thr0.6                 91.06   89.81   1.37  13.27      553    1.23
+fixed: elastic-w0.25-thr0.7                 91.42   86.71   5.14  40.82      642    1.34
+fixed: elastic-w0.25-thr0.8                 91.73   80.79  11.93  59.49      743    1.54
+fixed: elastic-w0.5-thr0.6                  91.30   68.46  25.01  70.79      972    2.23
+fixed: elastic-w0.5-thr0.7                  91.82   65.95  28.17  72.47     1051    2.40
+fixed: elastic-w0.5-thr0.8                  92.10   61.97  32.72  74.28     1174    2.68
+fixed: elastic-w0.75-thr0.7                 92.28   53.57  41.95  77.33     1523    3.47
+fixed: elastic-w0.75-thr0.8                 92.68   51.13  44.84  78.21     1686    3.82
+fixed: elastic-w0.75-thr0.95                92.74   41.77  54.96  81.18     2535    5.88
+fixed: elastic-w1.0-exit12                  93.04   33.17  64.35  86.17     4436   11.02
+greedy SLA rule                             91.12   89.36   1.93  33.45      576    2.32
+MDP beta=0.0                                91.15   83.79   8.08  77.76     1051    2.68
+MDP beta=0.05                               91.02   90.21   0.89  11.80      533    2.30
+MDP beta=0.1                                90.80   90.63   0.19   2.69      468    2.22
+MDP beta=0.2                                90.62   90.62   0.00   0.15      371    2.17
+MDP beta=0.5                                90.14   90.14   0.00   0.00      194    2.13
+MDP beta=1.0                                89.63   89.63   0.00   0.00      127    2.08
+
+================ summary (MDP beta=0.2 fixed in advance; best fixed = oracle) ================
+ load | best fixed (oracle)                    eff.acc  SLA%    GF |  greedy  SLA%    GF |     MDP  SLA%    GF
+  2.0 | elastic-w0.75-thr0.8                     92.70   0.0  3.82 |   92.76   4.2  5.69 |   92.73   0.0  5.59
+  3.0 | elastic-w0.75-thr0.8                     92.30  23.8  3.82 |   92.60  14.6  4.74 |   92.48   0.0  4.62
+  4.0 | elastic-w0.5-thr0.8                      92.04   8.8  2.68 |   92.36  19.7  3.97 |   92.16   0.0  3.85
+  5.0 | elastic-w0.25-thr0.8                     91.71   0.0  1.54 |   92.11  18.8  3.44 |   91.80   0.0  3.32
+  6.0 | elastic-w0.25-thr0.8                     91.69   1.8  1.54 |   91.97  18.8  2.93 |   91.50   0.0  2.82
+  8.0 | elastic-w0.25-thr0.5                     89.87   0.4  1.12 |   89.36  33.5  2.32 |   90.62   0.1  2.17
+wrote D:\UvA_VU\Period 7\Big Data at the Edge\BDTE Project_adaptive-bert\results\sim_sweep_elastic.json and D:\UvA_VU\Period 7\Big Data at the Edge\BDTE Project_adaptive-bert\results\sim_sweep_elastic.png
+=== simulate {"name": "elastic", "sweep": true, "sim": {"calm_load": 0.5, "burst_load": 2.0, "calm_mean_s": 20.0, "burst_mean_s": 5.0, "queue_capacity": 50, "sla_ms": 500, "duration_s": 3600, "seeds": [0, 1, 2, 3, 4], "betas": [0.0, 0.05, 0.1, 0.2, 0.5, 1.0], "drop_penalty": 1.0, "beta_main": 0.2, "sweep_burst_loads": [2.0, 3.0, 4.0, 5.0, 6.0, 8.0]}, "time": "2026-10-13T04:15:59", "host": "LAPTOP-5OAB11N8", "torch": "2.14.0+cu126", "transformers": "5.18.0", "gpu": "NVIDIA GeForce GTX 1650", "git_commit": "4bfaf15"}
+
+================ burst load 2.0x full-model capacity ================
+full model serves 11.33 q/s; calm 5.67 q/s, burst 22.66 q/s, mean load 0.80x of full-model capacity
+
+policy                                        acc eff.acc  drop%   SLA%   p95 ms  GFLOPs
+fixed: elastic-w0.25-exit4                  86.09   86.09   0.00   0.00       15    0.92
+fixed: elastic-w0.25-thr0.5                 89.84   89.84   0.00   0.00       25    1.12
+fixed: elastic-w0.25-thr0.6                 91.02   91.02   0.00   0.00       26    1.23
+fixed: elastic-w0.25-thr0.7                 91.37   91.37   0.00   0.00       27    1.34
+fixed: elastic-w0.25-thr0.8                 91.72   91.72   0.00   0.00       32    1.54
+fixed: elastic-w0.5-thr0.6                  91.27   91.27   0.00   0.00       48    2.23
+fixed: elastic-w0.5-thr0.7                  91.84   91.84   0.00   0.00       55    2.40
+fixed: elastic-w0.5-thr0.8                  92.13   92.13   0.00   0.00       67    2.68
+fixed: elastic-w0.75-thr0.7                 92.28   92.28   0.00   0.00      113    3.47
+fixed: elastic-w0.75-thr0.8                 92.70   92.70   0.00   0.00      150    3.82
+fixed: elastic-w0.75-thr0.95                92.76   92.56   0.22  24.61     1516    5.88
+fixed: elastic-w1.0-exit12                  93.06   82.14  11.74  56.44     4387   11.02
+greedy SLA rule                             92.76   92.76   0.00   4.22      490    5.69
+MDP beta=0.0                                92.76   92.73   0.04  24.38     1502    5.87
+MDP beta=0.05                               92.76   92.76   0.00  22.15      790    5.78
+MDP beta=0.1                                92.76   92.76   0.00   6.48      517    5.70
+MDP beta=0.2                                92.73   92.73   0.00   0.00      309    5.59
+MDP beta=0.5                                92.67   92.67   0.00   0.00      152    5.34
+MDP beta=1.0                                92.52   92.52   0.00   0.00      107    5.02
+
+================ burst load 3.0x full-model capacity ================
+full model serves 11.33 q/s; calm 5.67 q/s, burst 33.99 q/s, mean load 1.00x of full-model capacity
+
+policy                                        acc eff.acc  drop%   SLA%   p95 ms  GFLOPs
+fixed: elastic-w0.25-exit4                  86.08   86.08   0.00   0.00       17    0.92
+fixed: elastic-w0.25-thr0.5                 89.86   89.86   0.00   0.00       27    1.12
+fixed: elastic-w0.25-thr0.6                 91.02   91.02   0.00   0.00       31    1.23
+fixed: elastic-w0.25-thr0.7                 91.36   91.36   0.00   0.00       35    1.34
+fixed: elastic-w0.25-thr0.8                 91.70   91.70   0.00   0.00       44    1.54
+fixed: elastic-w0.5-thr0.6                  91.28   91.28   0.00   0.00       74    2.23
+fixed: elastic-w0.5-thr0.7                  91.82   91.82   0.00   0.00       92    2.40
+fixed: elastic-w0.5-thr0.8                  92.11   92.11   0.00   0.00      130    2.68
+fixed: elastic-w0.75-thr0.7                 92.27   92.26   0.01   6.77      566    3.47
+fixed: elastic-w0.75-thr0.8                 92.68   92.30   0.40  23.83     1221    3.82
+fixed: elastic-w0.75-thr0.95                92.77   81.99  11.62  55.24     2451    5.88
+fixed: elastic-w1.0-exit12                  93.05   67.30  27.67  69.37     4416   11.02
+greedy SLA rule                             92.60   92.60   0.00  14.56      562    4.74
+MDP beta=0.0                                92.59   91.08   1.63  55.05     1869    5.25
+MDP beta=0.05                               92.59   92.59   0.00  48.56      788    4.85
+MDP beta=0.1                                92.55   92.55   0.00   5.95      510    4.72
+MDP beta=0.2                                92.48   92.48   0.00   0.00      309    4.62
+MDP beta=0.5                                92.29   92.29   0.00   0.00      175    4.51
+MDP beta=1.0                                92.13   92.13   0.00   0.00      108    4.29
+
+================ burst load 4.0x full-model capacity ================
+full model serves 11.33 q/s; calm 5.67 q/s, burst 45.32 q/s, mean load 1.20x of full-model capacity
+
+policy                                        acc eff.acc  drop%   SLA%   p95 ms  GFLOPs
+fixed: elastic-w0.25-exit4                  86.11   86.11   0.00   0.00       21    0.92
+fixed: elastic-w0.25-thr0.5                 89.88   89.88   0.00   0.00       33    1.12
+fixed: elastic-w0.25-thr0.6                 91.04   91.04   0.00   0.00       40    1.23
+fixed: elastic-w0.25-thr0.7                 91.38   91.38   0.00   0.00       48    1.34
+fixed: elastic-w0.25-thr0.8                 91.72   91.72   0.00   0.00       63    1.54
+fixed: elastic-w0.5-thr0.6                  91.29   91.29   0.00   0.01      155    2.23
+fixed: elastic-w0.5-thr0.7                  91.82   91.82   0.00   0.09      245    2.40
+fixed: elastic-w0.5-thr0.8                  92.11   92.04   0.08   8.85      638    2.68
+fixed: elastic-w0.75-thr0.7                 92.28   86.23   6.56  49.96     1449    3.47
+fixed: elastic-w0.75-thr0.8                 92.69   83.19  10.25  55.72     1617    3.82
+fixed: elastic-w0.75-thr0.95                92.74   69.30  25.27  66.10     2503    5.88
+fixed: elastic-w1.0-exit12                  93.04   55.69  40.14  75.68     4427   11.02
+greedy SLA rule                             92.36   92.36   0.00  19.69      575    3.97
+MDP beta=0.0                                92.31   89.86   2.66  65.88     1717    4.46
+MDP beta=0.05                               92.32   92.32   0.00  51.97      715    4.06
+MDP beta=0.1                                92.27   92.27   0.00   2.85      464    3.94
+MDP beta=0.2                                92.16   92.16   0.00   0.05      308    3.85
+MDP beta=0.5                                91.95   91.95   0.00   0.00      162    3.75
+MDP beta=1.0                                91.71   91.71   0.00   0.00      110    3.64
+
+================ burst load 5.0x full-model capacity ================
+full model serves 11.33 q/s; calm 5.67 q/s, burst 56.65 q/s, mean load 1.40x of full-model capacity
+
+policy                                        acc eff.acc  drop%   SLA%   p95 ms  GFLOPs
+fixed: elastic-w0.25-exit4                  86.12   86.12   0.00   0.00       25    0.92
+fixed: elastic-w0.25-thr0.5                 89.88   89.88   0.00   0.00       43    1.12
+fixed: elastic-w0.25-thr0.6                 91.04   91.04   0.00   0.00       55    1.23
+fixed: elastic-w0.25-thr0.7                 91.38   91.38   0.00   0.00       70    1.34
+fixed: elastic-w0.25-thr0.8                 91.71   91.71   0.00   0.00      111    1.54
+fixed: elastic-w0.5-thr0.6                  91.29   90.93   0.39  15.34      742    2.23
+fixed: elastic-w0.5-thr0.7                  91.82   89.95   2.04  34.27      951    2.40
+fixed: elastic-w0.5-thr0.8                  92.11   86.35   6.25  49.11     1119    2.68
+fixed: elastic-w0.75-thr0.7                 92.27   76.20  17.42  62.11     1488    3.47
+fixed: elastic-w0.75-thr0.8                 92.69   73.03  21.21  64.48     1649    3.82
+fixed: elastic-w0.75-thr0.95                92.74   60.50  34.76  70.52     2514    5.88
+fixed: elastic-w1.0-exit12                  93.03   48.72  47.63  78.28     4427   11.02
+greedy SLA rule                             92.11   92.11   0.00  18.82      568    3.44
+MDP beta=0.0                                92.05   89.54   2.73  70.17     1542    3.86
+MDP beta=0.05                               91.95   91.95   0.00  44.67      650    3.51
+MDP beta=0.1                                91.89   91.89   0.00   1.76      414    3.41
+MDP beta=0.2                                91.80   91.80   0.00   0.03      267    3.32
+MDP beta=0.5                                91.58   91.58   0.00   0.00      154    3.23
+MDP beta=1.0                                91.31   91.31   0.00   0.00      109    3.16
+
+================ burst load 6.0x full-model capacity ================
+full model serves 11.33 q/s; calm 5.67 q/s, burst 67.98 q/s, mean load 1.60x of full-model capacity
+
+policy                                        acc eff.acc  drop%   SLA%   p95 ms  GFLOPs
+fixed: elastic-w0.25-exit4                  86.13   86.13   0.00   0.00       33    0.92
+fixed: elastic-w0.25-thr0.5                 89.89   89.89   0.00   0.00       63    1.12
+fixed: elastic-w0.25-thr0.6                 91.04   91.04   0.00   0.00       88    1.23
+fixed: elastic-w0.25-thr0.7                 91.38   91.38   0.00   0.00      137    1.34
+fixed: elastic-w0.25-thr0.8                 91.72   91.69   0.04   1.81      382    1.54
+fixed: elastic-w0.5-thr0.6                  91.29   84.11   7.87  52.00      942    2.23
+fixed: elastic-w0.5-thr0.7                  91.81   81.48  11.26  57.38     1025    2.40
+fixed: elastic-w0.5-thr0.8                  92.11   77.08  16.32  62.68     1152    2.68
+fixed: elastic-w0.75-thr0.7                 92.28   67.14  27.24  69.24     1507    3.47
+fixed: elastic-w0.75-thr0.8                 92.68   64.12  30.82  70.72     1671    3.82
+fixed: elastic-w0.75-thr0.95                92.75   52.84  43.03  75.33     2529    5.88
+fixed: elastic-w1.0-exit12                  93.05   42.28  54.56  82.07     4432   11.02
+greedy SLA rule                             91.98   91.97   0.01  18.82      566    2.93
+MDP beta=0.0                                91.57   87.16   4.81  74.86     1413    3.41
+MDP beta=0.05                               91.68   91.68   0.00  27.26      601    3.00
+MDP beta=0.1                                91.62   91.62   0.00   1.40      374    2.90
+MDP beta=0.2                                91.50   91.50   0.00   0.02      238    2.82
+MDP beta=0.5                                91.20   91.20   0.00   0.00      149    2.76
+MDP beta=1.0                                90.88   90.88   0.00   0.00      108    2.71
+
+================ burst load 8.0x full-model capacity ================
+full model serves 11.33 q/s; calm 5.67 q/s, burst 90.64 q/s, mean load 2.00x of full-model capacity
+
+policy                                        acc eff.acc  drop%   SLA%   p95 ms  GFLOPs
+fixed: elastic-w0.25-exit4                  86.14   86.14   0.00   0.00       67    0.92
+fixed: elastic-w0.25-thr0.5                 89.92   89.87   0.06   0.44      312    1.12
+fixed: elastic-w0.25-thr0.6                 91.06   89.81   1.37  13.27      553    1.23
+fixed: elastic-w0.25-thr0.7                 91.42   86.71   5.14  40.82      642    1.34
+fixed: elastic-w0.25-thr0.8                 91.73   80.79  11.93  59.49      743    1.54
+fixed: elastic-w0.5-thr0.6                  91.30   68.46  25.01  70.79      972    2.23
+fixed: elastic-w0.5-thr0.7                  91.82   65.95  28.17  72.47     1051    2.40
+fixed: elastic-w0.5-thr0.8                  92.10   61.97  32.72  74.28     1174    2.68
+fixed: elastic-w0.75-thr0.7                 92.28   53.57  41.95  77.33     1523    3.47
+fixed: elastic-w0.75-thr0.8                 92.68   51.13  44.84  78.21     1686    3.82
+fixed: elastic-w0.75-thr0.95                92.74   41.77  54.96  81.18     2535    5.88
+fixed: elastic-w1.0-exit12                  93.04   33.17  64.35  86.17     4436   11.02
+greedy SLA rule                             91.12   89.36   1.93  33.45      576    2.32
+MDP beta=0.0                                91.15   83.79   8.08  77.76     1051    2.68
+MDP beta=0.05                               91.02   90.21   0.89  11.80      533    2.30
+MDP beta=0.1                                90.80   90.63   0.19   2.69      468    2.22
+MDP beta=0.2                                90.62   90.62   0.00   0.15      371    2.17
+MDP beta=0.5                                90.14   90.14   0.00   0.00      194    2.13
+MDP beta=1.0                                89.63   89.63   0.00   0.00      127    2.08
+
+================ summary (MDP beta=0.2 fixed in advance; best fixed = oracle meeting the SLA, i.e. <= 1% violations) ================
+ load | best fixed meeting SLA (oracle)        eff.acc  SLA%    GF |  greedy  SLA%    GF |     MDP  SLA%    GF
+  2.0 | elastic-w0.75-thr0.8                     92.70   0.0  3.82 |   92.76   4.2  5.69 |   92.73   0.0  5.59
+  3.0 | elastic-w0.5-thr0.8                      92.11   0.0  2.68 |   92.60  14.6  4.74 |   92.48   0.0  4.62
+  4.0 | elastic-w0.5-thr0.7                      91.82   0.1  2.40 |   92.36  19.7  3.97 |   92.16   0.0  3.85
+  5.0 | elastic-w0.25-thr0.8                     91.71   0.0  1.54 |   92.11  18.8  3.44 |   91.80   0.0  3.32
+  6.0 | elastic-w0.25-thr0.7                     91.38   0.0  1.34 |   91.97  18.8  2.93 |   91.50   0.0  2.82
+  8.0 | elastic-w0.25-thr0.5                     89.87   0.4  1.12 |   89.36  33.5  2.32 |   90.62   0.1  2.17
+wrote D:\UvA_VU\Period 7\Big Data at the Edge\BDTE Project_adaptive-bert\results\sim_sweep_elastic.json and D:\UvA_VU\Period 7\Big Data at the Edge\BDTE Project_adaptive-bert\results\sim_sweep_elastic.png
+=== simulate {"name": "elastic", "sweep": true, "sim": {"calm_load": 0.5, "burst_load": 2.0, "calm_mean_s": 20.0, "burst_mean_s": 5.0, "queue_capacity": 50, "sla_ms": 500, "duration_s": 3600, "seeds": [0, 1, 2, 3, 4], "betas": [0.0, 0.05, 0.1, 0.2, 0.5, 1.0], "drop_penalty": 1.0, "beta_main": 0.2, "sweep_burst_loads": [2.0, 3.0, 4.0, 5.0, 6.0, 8.0]}, "time": "2026-10-13T04:21:29", "host": "LAPTOP-5OAB11N8", "torch": "2.14.0+cu126", "transformers": "5.18.0", "gpu": "NVIDIA GeForce GTX 1650", "git_commit": "4bfaf15"}
+
+================ burst load 2.0x full-model capacity ================
+full model serves 11.33 q/s; calm 5.67 q/s, burst 22.66 q/s, mean load 0.80x of full-model capacity
+
+policy                                        acc eff.acc  drop%   SLA%   p95 ms  GFLOPs
+fixed: elastic-w0.25-exit4                  86.09   86.09   0.00   0.00       15    0.92
+fixed: elastic-w0.25-thr0.5                 89.84   89.84   0.00   0.00       25    1.12
+fixed: elastic-w0.25-thr0.6                 91.02   91.02   0.00   0.00       26    1.23
+fixed: elastic-w0.25-thr0.7                 91.37   91.37   0.00   0.00       27    1.34
+fixed: elastic-w0.25-thr0.8                 91.72   91.72   0.00   0.00       32    1.54
+fixed: elastic-w0.5-thr0.6                  91.27   91.27   0.00   0.00       48    2.23
+fixed: elastic-w0.5-thr0.7                  91.84   91.84   0.00   0.00       55    2.40
+fixed: elastic-w0.5-thr0.8                  92.13   92.13   0.00   0.00       67    2.68
+fixed: elastic-w0.75-thr0.7                 92.28   92.28   0.00   0.00      113    3.47
+fixed: elastic-w0.75-thr0.8                 92.70   92.70   0.00   0.00      150    3.82
+fixed: elastic-w0.75-thr0.95                92.76   92.56   0.22  24.61     1516    5.88
+fixed: elastic-w1.0-exit12                  93.06   82.14  11.74  56.44     4387   11.02
+greedy SLA rule                             92.76   92.76   0.00   4.22      490    5.69
+MDP beta=0.0                                92.76   92.73   0.04  24.38     1502    5.87
+MDP beta=0.05                               92.76   92.76   0.00  22.15      790    5.78
+MDP beta=0.1                                92.76   92.76   0.00   6.48      517    5.70
+MDP beta=0.2                                92.73   92.73   0.00   0.00      309    5.59
+MDP beta=0.5                                92.67   92.67   0.00   0.00      152    5.34
+MDP beta=1.0                                92.52   92.52   0.00   0.00      107    5.02
+MDP beta=0.2 solved for 2.0x only           92.73   92.73   0.00   0.00      309    5.59
+
+================ burst load 3.0x full-model capacity ================
+full model serves 11.33 q/s; calm 5.67 q/s, burst 33.99 q/s, mean load 1.00x of full-model capacity
+
+policy                                        acc eff.acc  drop%   SLA%   p95 ms  GFLOPs
+fixed: elastic-w0.25-exit4                  86.08   86.08   0.00   0.00       17    0.92
+fixed: elastic-w0.25-thr0.5                 89.86   89.86   0.00   0.00       27    1.12
+fixed: elastic-w0.25-thr0.6                 91.02   91.02   0.00   0.00       31    1.23
+fixed: elastic-w0.25-thr0.7                 91.36   91.36   0.00   0.00       35    1.34
+fixed: elastic-w0.25-thr0.8                 91.70   91.70   0.00   0.00       44    1.54
+fixed: elastic-w0.5-thr0.6                  91.28   91.28   0.00   0.00       74    2.23
+fixed: elastic-w0.5-thr0.7                  91.82   91.82   0.00   0.00       92    2.40
+fixed: elastic-w0.5-thr0.8                  92.11   92.11   0.00   0.00      130    2.68
+fixed: elastic-w0.75-thr0.7                 92.27   92.26   0.01   6.77      566    3.47
+fixed: elastic-w0.75-thr0.8                 92.68   92.30   0.40  23.83     1221    3.82
+fixed: elastic-w0.75-thr0.95                92.77   81.99  11.62  55.24     2451    5.88
+fixed: elastic-w1.0-exit12                  93.05   67.30  27.67  69.37     4416   11.02
+greedy SLA rule                             92.60   92.60   0.00  14.56      562    4.74
+MDP beta=0.0                                92.59   91.08   1.63  55.05     1869    5.25
+MDP beta=0.05                               92.59   92.59   0.00  48.56      788    4.85
+MDP beta=0.1                                92.55   92.55   0.00   5.95      510    4.72
+MDP beta=0.2                                92.48   92.48   0.00   0.00      309    4.62
+MDP beta=0.5                                92.29   92.29   0.00   0.00      175    4.51
+MDP beta=1.0                                92.13   92.13   0.00   0.00      108    4.29
+MDP beta=0.2 solved for 2.0x only           92.45   92.45   0.00   0.00      307    4.62
+
+================ burst load 4.0x full-model capacity ================
+full model serves 11.33 q/s; calm 5.67 q/s, burst 45.32 q/s, mean load 1.20x of full-model capacity
+
+policy                                        acc eff.acc  drop%   SLA%   p95 ms  GFLOPs
+fixed: elastic-w0.25-exit4                  86.11   86.11   0.00   0.00       21    0.92
+fixed: elastic-w0.25-thr0.5                 89.88   89.88   0.00   0.00       33    1.12
+fixed: elastic-w0.25-thr0.6                 91.04   91.04   0.00   0.00       40    1.23
+fixed: elastic-w0.25-thr0.7                 91.38   91.38   0.00   0.00       48    1.34
+fixed: elastic-w0.25-thr0.8                 91.72   91.72   0.00   0.00       63    1.54
+fixed: elastic-w0.5-thr0.6                  91.29   91.29   0.00   0.01      155    2.23
+fixed: elastic-w0.5-thr0.7                  91.82   91.82   0.00   0.09      245    2.40
+fixed: elastic-w0.5-thr0.8                  92.11   92.04   0.08   8.85      638    2.68
+fixed: elastic-w0.75-thr0.7                 92.28   86.23   6.56  49.96     1449    3.47
+fixed: elastic-w0.75-thr0.8                 92.69   83.19  10.25  55.72     1617    3.82
+fixed: elastic-w0.75-thr0.95                92.74   69.30  25.27  66.10     2503    5.88
+fixed: elastic-w1.0-exit12                  93.04   55.69  40.14  75.68     4427   11.02
+greedy SLA rule                             92.36   92.36   0.00  19.69      575    3.97
+MDP beta=0.0                                92.31   89.86   2.66  65.88     1717    4.46
+MDP beta=0.05                               92.32   92.32   0.00  51.97      715    4.06
+MDP beta=0.1                                92.27   92.27   0.00   2.85      464    3.94
+MDP beta=0.2                                92.16   92.16   0.00   0.05      308    3.85
+MDP beta=0.5                                91.95   91.95   0.00   0.00      162    3.75
+MDP beta=1.0                                91.71   91.71   0.00   0.00      110    3.64
+MDP beta=0.2 solved for 2.0x only           92.16   92.16   0.00   0.00      281    3.84
+
+================ burst load 5.0x full-model capacity ================
+full model serves 11.33 q/s; calm 5.67 q/s, burst 56.65 q/s, mean load 1.40x of full-model capacity
+
+policy                                        acc eff.acc  drop%   SLA%   p95 ms  GFLOPs
+fixed: elastic-w0.25-exit4                  86.12   86.12   0.00   0.00       25    0.92
+fixed: elastic-w0.25-thr0.5                 89.88   89.88   0.00   0.00       43    1.12
+fixed: elastic-w0.25-thr0.6                 91.04   91.04   0.00   0.00       55    1.23
+fixed: elastic-w0.25-thr0.7                 91.38   91.38   0.00   0.00       70    1.34
+fixed: elastic-w0.25-thr0.8                 91.71   91.71   0.00   0.00      111    1.54
+fixed: elastic-w0.5-thr0.6                  91.29   90.93   0.39  15.34      742    2.23
+fixed: elastic-w0.5-thr0.7                  91.82   89.95   2.04  34.27      951    2.40
+fixed: elastic-w0.5-thr0.8                  92.11   86.35   6.25  49.11     1119    2.68
+fixed: elastic-w0.75-thr0.7                 92.27   76.20  17.42  62.11     1488    3.47
+fixed: elastic-w0.75-thr0.8                 92.69   73.03  21.21  64.48     1649    3.82
+fixed: elastic-w0.75-thr0.95                92.74   60.50  34.76  70.52     2514    5.88
+fixed: elastic-w1.0-exit12                  93.03   48.72  47.63  78.28     4427   11.02
+greedy SLA rule                             92.11   92.11   0.00  18.82      568    3.44
+MDP beta=0.0                                92.05   89.54   2.73  70.17     1542    3.86
+MDP beta=0.05                               91.95   91.95   0.00  44.67      650    3.51
+MDP beta=0.1                                91.89   91.89   0.00   1.76      414    3.41
+MDP beta=0.2                                91.80   91.80   0.00   0.03      267    3.32
+MDP beta=0.5                                91.58   91.58   0.00   0.00      154    3.23
+MDP beta=1.0                                91.31   91.31   0.00   0.00      109    3.16
+MDP beta=0.2 solved for 2.0x only           91.80   91.80   0.00   0.02      260    3.32
+
+================ burst load 6.0x full-model capacity ================
+full model serves 11.33 q/s; calm 5.67 q/s, burst 67.98 q/s, mean load 1.60x of full-model capacity
+
+policy                                        acc eff.acc  drop%   SLA%   p95 ms  GFLOPs
+fixed: elastic-w0.25-exit4                  86.13   86.13   0.00   0.00       33    0.92
+fixed: elastic-w0.25-thr0.5                 89.89   89.89   0.00   0.00       63    1.12
+fixed: elastic-w0.25-thr0.6                 91.04   91.04   0.00   0.00       88    1.23
+fixed: elastic-w0.25-thr0.7                 91.38   91.38   0.00   0.00      137    1.34
+fixed: elastic-w0.25-thr0.8                 91.72   91.69   0.04   1.81      382    1.54
+fixed: elastic-w0.5-thr0.6                  91.29   84.11   7.87  52.00      942    2.23
+fixed: elastic-w0.5-thr0.7                  91.81   81.48  11.26  57.38     1025    2.40
+fixed: elastic-w0.5-thr0.8                  92.11   77.08  16.32  62.68     1152    2.68
+fixed: elastic-w0.75-thr0.7                 92.28   67.14  27.24  69.24     1507    3.47
+fixed: elastic-w0.75-thr0.8                 92.68   64.12  30.82  70.72     1671    3.82
+fixed: elastic-w0.75-thr0.95                92.75   52.84  43.03  75.33     2529    5.88
+fixed: elastic-w1.0-exit12                  93.05   42.28  54.56  82.07     4432   11.02
+greedy SLA rule                             91.98   91.97   0.01  18.82      566    2.93
+MDP beta=0.0                                91.57   87.16   4.81  74.86     1413    3.41
+MDP beta=0.05                               91.68   91.68   0.00  27.26      601    3.00
+MDP beta=0.1                                91.62   91.62   0.00   1.40      374    2.90
+MDP beta=0.2                                91.50   91.50   0.00   0.02      238    2.82
+MDP beta=0.5                                91.20   91.20   0.00   0.00      149    2.76
+MDP beta=1.0                                90.88   90.88   0.00   0.00      108    2.71
+MDP beta=0.2 solved for 2.0x only           91.44   91.44   0.00   0.03      249    2.83
+
+================ burst load 8.0x full-model capacity ================
+full model serves 11.33 q/s; calm 5.67 q/s, burst 90.64 q/s, mean load 2.00x of full-model capacity
+
+policy                                        acc eff.acc  drop%   SLA%   p95 ms  GFLOPs
+fixed: elastic-w0.25-exit4                  86.14   86.14   0.00   0.00       67    0.92
+fixed: elastic-w0.25-thr0.5                 89.92   89.87   0.06   0.44      312    1.12
+fixed: elastic-w0.25-thr0.6                 91.06   89.81   1.37  13.27      553    1.23
+fixed: elastic-w0.25-thr0.7                 91.42   86.71   5.14  40.82      642    1.34
+fixed: elastic-w0.25-thr0.8                 91.73   80.79  11.93  59.49      743    1.54
+fixed: elastic-w0.5-thr0.6                  91.30   68.46  25.01  70.79      972    2.23
+fixed: elastic-w0.5-thr0.7                  91.82   65.95  28.17  72.47     1051    2.40
+fixed: elastic-w0.5-thr0.8                  92.10   61.97  32.72  74.28     1174    2.68
+fixed: elastic-w0.75-thr0.7                 92.28   53.57  41.95  77.33     1523    3.47
+fixed: elastic-w0.75-thr0.8                 92.68   51.13  44.84  78.21     1686    3.82
+fixed: elastic-w0.75-thr0.95                92.74   41.77  54.96  81.18     2535    5.88
+fixed: elastic-w1.0-exit12                  93.04   33.17  64.35  86.17     4436   11.02
+greedy SLA rule                             91.12   89.36   1.93  33.45      576    2.32
+MDP beta=0.0                                91.15   83.79   8.08  77.76     1051    2.68
+MDP beta=0.05                               91.02   90.21   0.89  11.80      533    2.30
+MDP beta=0.1                                90.80   90.63   0.19   2.69      468    2.22
+MDP beta=0.2                                90.62   90.62   0.00   0.15      371    2.17
+MDP beta=0.5                                90.14   90.14   0.00   0.00      194    2.13
+MDP beta=1.0                                89.63   89.63   0.00   0.00      127    2.08
+MDP beta=0.2 solved for 2.0x only           90.65   90.64   0.01   0.25      397    2.18
+
+================ summary (MDP beta=0.2 fixed in advance; best fixed = oracle meeting the SLA, i.e. <= 1% violations) ================
+ load | best fixed meeting SLA (oracle)        eff.acc  SLA%    GF |  greedy  SLA%    GF |     MDP  SLA%    GF | MDP@2.0x  SLA%    GF
+  2.0 | elastic-w0.75-thr0.8                     92.70   0.0  3.82 |   92.76   4.2  5.69 |   92.73   0.0  5.59 |    92.73   0.0  5.59
+  3.0 | elastic-w0.5-thr0.8                      92.11   0.0  2.68 |   92.60  14.6  4.74 |   92.48   0.0  4.62 |    92.45   0.0  4.62
+  4.0 | elastic-w0.5-thr0.7                      91.82   0.1  2.40 |   92.36  19.7  3.97 |   92.16   0.0  3.85 |    92.16   0.0  3.84
+  5.0 | elastic-w0.25-thr0.8                     91.71   0.0  1.54 |   92.11  18.8  3.44 |   91.80   0.0  3.32 |    91.80   0.0  3.32
+  6.0 | elastic-w0.25-thr0.7                     91.38   0.0  1.34 |   91.97  18.8  2.93 |   91.50   0.0  2.82 |    91.44   0.0  2.83
+  8.0 | elastic-w0.25-thr0.5                     89.87   0.4  1.12 |   89.36  33.5  2.32 |   90.62   0.1  2.17 |    90.64   0.3  2.18
+wrote D:\UvA_VU\Period 7\Big Data at the Edge\BDTE Project_adaptive-bert\results\sim_sweep_elastic.json and D:\UvA_VU\Period 7\Big Data at the Edge\BDTE Project_adaptive-bert\results\sim_sweep_elastic.png
