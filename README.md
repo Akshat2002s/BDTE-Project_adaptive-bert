@@ -19,10 +19,10 @@ pip install --force-reinstall --no-deps torch==2.14.0 --index-url https://downlo
 conda env config vars set HF_HOME="D:\UvA_VU\Period 7\Big Data at the Edge\.cache\huggingface"
 ```
 
-The local GPU (GTX 1650, 4 GB) is enough for the baselines and single elastic runs.
-DAS-5 is for sweeps and ablations, not a requirement.
+The local GPU (GTX 1650, 4 GB) was enough: every run in this project was trained and
+measured on that laptop. The DAS-5 instructions below were never used and are untested.
 
-DAS-5 (venv, same `requirements.txt`):
+DAS-5 (venv, same `requirements.txt`, untested):
 
 ```bash
 python -m venv ~/venvs/adaptive-bert && source ~/venvs/adaptive-bert/bin/activate
@@ -86,14 +86,14 @@ slurm/                   DAS-5 job scripts
 tests/                   FLOPs, registry, split, elastic model and controller checks
 ```
 
-## Plan
+## Plan and status
 
-| Phase | Model and training | Benchmarking, controller, simulation |
-|---|---|---|
-| 1 | Static baselines trained and frozen | FLOPs/latency harness, baseline points registered |
-| 2 | ElasticBert: importance ordering, slicing, exits, distillation (local GPU) | Exit calibration on val, per-config latency table |
-| 3 | Fixes, INT8 dynamic quantisation, training sweeps on DAS-5 | MDP (value iteration), bursty traffic simulation, Pareto sweeps |
-| 4 | Ablations | Slides |
+| Phase | Model and training | Benchmarking, controller, simulation | Status |
+|---|---|---|---|
+| 1 | Static baselines trained and frozen | FLOPs/latency harness, baseline points registered | Done |
+| 2 | ElasticBert: importance ordering, slicing, exits, distillation (local GPU) | Exit calibration on val, per-config latency table | Done |
+| 3 | Fixes, INT8 dynamic quantisation, training sweeps on DAS-5 | MDP (value iteration), bursty traffic simulation, Pareto sweeps | Done, except INT8 and DAS-5 (see below) |
+| 4 | Ablations | Slides | Done (ablations at 3 epochs) |
 
 ## Run history
 
@@ -120,7 +120,14 @@ refer to the models now in the `-lr3e-5` / `-3ep` folders below.
 - Training rule for the extreme widths: sandwich rule (largest + smallest + one random
   middle width per step), KD from the frozen bert-base on every exit.
 
-## Open questions
+## Not done / future work
 
-- Statically head-pruned baselines: which ratios (can reuse `importance.pt` from the
-  elastic run).
+- **INT8 dynamic quantisation:** planned, not finished. It would change latency and
+  memory, not FLOPs.
+- **Statically head-pruned baselines:** not built; BERT-base and DistilBERT are the
+  static baselines. Could reuse `importance.pt` from the elastic run.
+- **DAS-5:** never used; `slurm/train_baseline.sbatch` is an untested template.
+- **KD ablation with the final teacher:** the ablations ran at 3 epochs with the
+  lr 3e-5 teacher; the "no effect" result for KD may differ with the stronger teacher.
+- **One training seed** per run; real gateway hardware and real traffic logs instead
+  of a laptop CPU and a synthetic two-state burst model.

@@ -1,5 +1,6 @@
 #!/bin/bash
 # Fine-tune one static baseline on DAS-5.
+# UNTESTED template: every run in this project was trained locally (see README).
 #   sbatch slurm/train_baseline.sbatch bert-base
 #   sbatch slurm/train_baseline.sbatch distilbert
 #SBATCH --job-name=abert-baseline
@@ -11,8 +12,7 @@
 set -euo pipefail
 NAME=${1:?usage: sbatch slurm/train_baseline.sbatch <baseline-name>}
 
-# TODO: match this to how the lab venv was set up on the cluster
-# (module load ... / CUDA path), then:
+# Adapt to how the venv is set up on the cluster (module load ... / CUDA path):
 source "$HOME/venvs/adaptive-bert/bin/activate"
 
 cd "$SLURM_SUBMIT_DIR"

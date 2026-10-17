@@ -21,8 +21,8 @@ def build_tokenizer(hf_name_or_path: str | Path):
     return AutoTokenizer.from_pretrained(hf_name_or_path)
 
 
-# TODO(baselines): statically head-pruned BERTs. Plan: take the trained
-# bert-base checkpoint, rank heads by importance (same scoring the elastic
-# model will use), physically remove the bottom k% of heads and the matching
-# FFN neurons, fine-tune, then register each ratio as its own static point.
-# Check what head pruning transformers 5.x supports before writing it.
+# Not implemented (future work, see README): statically head-pruned BERTs.
+# The plan was to take the trained bert-base checkpoint, rank heads by
+# importance (the elastic model's scoring), physically remove the bottom k% of
+# heads and the matching FFN neurons, fine-tune, then register each ratio as
+# its own static point.
